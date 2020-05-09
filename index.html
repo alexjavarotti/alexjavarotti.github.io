@@ -11,6 +11,24 @@
             var button = document.getElementById('change-chart');
             var chartDiv = document.getElementById('chart_div');
 
+            var dataURL = 'https://github.com/alexjavarotti/alexjavarotti.github.io/blob/master/data.csv'
+            
+            function getText() {
+                var request = new XMLHttpRequest();
+                request.open('GET', dataURL, true);
+                request.send(null);
+                request.onreadystatechange = function () {
+                    if (request.readyState === 4 && request.status === 200) {
+                        var type = request.getResponseHeader('Content-Type');
+                        if (type.indexOf("text") !== 1) {
+                            return request.responseText;
+                        }
+                    }
+                }
+            }
+
+            var outer_text = getText();
+
             var data = google.visualization.arrayToDataTable([
                 ['Galaxy', 'Distance', 'Brightness'],
                 ['Canis Major Dwarf', 8000, 23.3],

@@ -13,6 +13,7 @@
 
             var dataURL = 'https://alexjavarotti.github.io/data.csv';
             var storedText;
+            var data;
 
             fetch(dataURL)
                 .then(function (response) {
@@ -22,18 +23,34 @@
                     });
                 });
 
-            function done() {
-                window.alert(storedText);
-            }
+            function csvToArray(csv) {
+                rows = csv.split("\n");
+                return rows.map(function (row) {
+                    return row.split(",");
+                });
+            };
 
-            var data = google.visualization.arrayToDataTable([
-                ['Galaxy', 'Distance', 'Brightness'],
-                ['Canis Major Dwarf', 8000, 23.3],
-                ['Sagittarius Dwarf', 24000, 4.5],
-                ['Ursa Major II Dwarf', 30000, 14.3],
-                ['Lg. Magellanic Cloud', 50000, 0.9],
-                ['Bootes I', 60000, 13.1]
-            ]);
+            function done() {
+                var array = csvToArray(storedText);
+                var typed = array.map(function(row) {
+                    return [
+                        row[0], 
+                        isNaN(row[1])?row[1]:parseFloat(row[1]),
+                        isNaN(row[2])?row[1]:parseFloat(row[2])
+                    ]
+                });
+
+                data = google.visualization.arrayToDataTable(typed);
+                // data = google.visualization.arrayToDataTable([
+                //     ['Galaxy', 'Distance', 'Brightness'],
+                //     ['Canis Major Dwarf', 8000, 23.3],
+                //     ['Sagittarius Dwarf', 24000, 4.5],
+                //     ['Ursa Major II Dwarf', 30000, 14.3],
+                //     ['Lg. Magellanic Cloud', 50000, 0.9],
+                //     ['Bootes I', 60000, 13.1]
+                // ]);
+                drawMaterialChart();
+            }
 
             var materialOptions = {
                 width: 1200,
@@ -80,8 +97,6 @@
                 button.innerText = 'Change to Material';
                 button.onclick = drawMaterialChart;
             }
-
-            drawMaterialChart();
         };
     </script>
 </head>

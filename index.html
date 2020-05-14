@@ -12,12 +12,12 @@
             var chartDiv = document.getElementById('chart_div');
 
             var dataURL1 = 'https://alexjavarotti.github.io/data.csv';
-            var dataURL2 = ''
+            var dataURL2 = 'https://raw.githubusercontent.com/alexjavarotti/alexjavarotti.github.io/develop/data/12052020/DT1_PAINEL_COVIDBR_20200512.csv'
             var storedText;
             var data;
 
             // Acessing data from published CSV files:
-            fetch(dataURL)
+            fetch(dataURL2)
                 .then(function (response) {
                     response.text().then(function (text) {
                         storedText = text;
@@ -28,17 +28,17 @@
             function csvToArray(csv) {
                 rows = csv.split("\n");
                 return rows.map(function (row) {
-                    return row.split(",");
+                    return row.split(";");
                 });
             };
 
             function done() {
                 var array = csvToArray(storedText);
-                var typed = array.map(function(row) {
+                var typed = array.map(function (row) {
                     return [
-                        row[0], 
-                        isNaN(row[1])?row[1]:parseFloat(row[1]),
-                        isNaN(row[2])?row[1]:parseFloat(row[2])
+                        row[0],
+                        isNaN(row[1]) ? row[1] : parseFloat(row[1]),
+                        isNaN(row[2]) ? row[1] : parseFloat(row[2])
                     ]
                 });
 
@@ -98,6 +98,29 @@
                 classicChart.draw(data, classicOptions);
                 button.innerText = 'Change to Material';
                 button.onclick = drawMaterialChart;
+            }
+
+
+            var queryOptions = {
+                csvColumns: ['number', 'number', 'number' /* Or whatever the columns in the CSV file are */],
+                csvHasHeader: true /* This should be false if your CSV file doesn't have a header */
+            }
+            /* csvUrl is the path to your csv */
+            var query = new google.visualization.Query(dataURL2, queryOptions);
+            query.send(handleQueryResponse);
+
+            function handleQueryResponse(response) {
+
+                if (response.isError()) {
+                    alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+                    return;
+                }
+
+                var data = response.getDataTable();
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('your div'));
+                // Draw your chart with the data table here.
+                // chart.draw(view, queryOptions);
             }
         };
     </script>

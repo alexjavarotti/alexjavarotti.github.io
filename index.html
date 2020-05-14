@@ -11,11 +11,11 @@
             var button = document.getElementById('change-chart');
             var chartDiv = document.getElementById('chart_div');
 
-            // Acessing data from published CSV files
             var dataURL = 'https://alexjavarotti.github.io/data.csv';
             var storedText;
             var data;
 
+            // Acessing data from published CSV files
             fetch(dataURL)
                 .then(function (response) {
                     response.text().then(function (text) {

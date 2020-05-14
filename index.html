@@ -8,13 +8,13 @@
 
         function drawStuff() {
 
-            var button = document.getElementById('change-chart');
             var chartDiv = document.getElementById('chart_div');
 
             var dataURL1 = 'https://alexjavarotti.github.io/data.csv';
             var dataURL2 = 'https://raw.githubusercontent.com/alexjavarotti/alexjavarotti.github.io/develop/data/12052020/DT1_PAINEL_COVIDBR_20200512.csv'
             var storedText;
             var data;
+            var view;
 
             // Acessing data from published CSV files:
             fetch(dataURL2)
@@ -26,7 +26,8 @@
                 });
 
             function csvToArray(csv) {
-                rows = csv.split("\n");
+                clean = csv.replace(/'/g, '');
+                rows = clean.split("\n")
                 return rows.map(function (row) {
                     return row.split(";");
                 });
@@ -37,97 +38,49 @@
                 var typed = array.map(function (row) {
                     return [
                         row[0],
-                        isNaN(row[1]) ? row[1] : parseFloat(row[1]),
-                        isNaN(row[2]) ? row[1] : parseFloat(row[2])
+                        row[7],
+                        isNaN(row[10]) ? row[10] : parseFloat(row[10]),
+                        isNaN(row[11]) ? row[11] : parseFloat(row[11])
                     ]
                 });
 
-                data = google.visualization.arrayToDataTable(array);
-                // data = google.visualization.arrayToDataTable([
-                //     ['Galaxy', 'Distance', 'Brightness'],
-                //     ['Canis Major Dwarf', 8000, 23.3],
-                //     ['Sagittarius Dwarf', 24000, 4.5],
-                //     ['Ursa Major II Dwarf', 30000, 14.3],
-                //     ['Lg. Magellanic Cloud', 50000, 0.9],
-                //     ['Bootes I', 60000, 13.1]
-                // ]);
-                drawMaterialChart();
+                typed.pop();
+                data = google.visualization.arrayToDataTable(typed);
+                filtered_rows = data.getFilteredRows([{ column: 0, value: "Brasil" }])
+                view = new google.visualization.DataView(data);
+                view.setRows(filtered_rows);
+                view.setColumns([1, 2, 3]);
+
+                drawChart();
             }
 
             var materialOptions = {
                 width: 1200,
                 chart: {
-                    title: 'Nearby galaxies',
-                    subtitle: 'distance on the left, brightness on the right'
+                    title: 'Brasil',
+                    subtitle: 'Casos e óbitos'
                 },
                 series: {
-                    0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
-                    1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
+                    0: { title: 'Casos', axis: 'casosAcumulado' }, // Bind series 0 to an axis named 'distance'.
+                    1: { title: 'Obitos', axis: 'obitosAcumulado' } // Bind series 1 to an axis named 'brightness'.
                 },
-                axes: {
-                    y: {
-                        distance: { label: 'parsecs' }, // Left y-axis.
-                        brightness: { side: 'right', label: 'apparent magnitude' } // Right y-axis.
+                vAxis: {
+                    viewWindow: {
+                        min: 0,
+                        max: 200000
                     }
                 }
             };
 
-            var classicOptions = {
-                width: 900,
-                series: {
-                    0: { targetAxisIndex: 0 },
-                    1: { targetAxisIndex: 1 }
-                },
-                title: 'Nearby galaxies - distance on the left, brightness on the right',
-                vAxes: {
-                    // Adds titles to each axis.
-                    0: { title: 'parsecs' },
-                    1: { title: 'apparent magnitude' }
-                }
-            };
-
-            function drawMaterialChart() {
+            function drawChart() {
                 var materialChart = new google.charts.Bar(chartDiv);
-                materialChart.draw(data, google.charts.Bar.convertOptions(materialOptions));
-                button.innerText = 'Change to Classic';
-                button.onclick = drawClassicChart;
+                materialChart.draw(view, google.charts.Bar.convertOptions(materialOptions));
             }
-
-            function drawClassicChart() {
-                var classicChart = new google.visualization.ColumnChart(chartDiv);
-                classicChart.draw(data, classicOptions);
-                button.innerText = 'Change to Material';
-                button.onclick = drawMaterialChart;
-            }
-
-
-            // var queryOptions = {
-            //     csvColumns: ['number', 'number', 'number' /* Or whatever the columns in the CSV file are */],
-            //     csvHasHeader: true /* This should be false if your CSV file doesn't have a header */
-            // }
-            // /* csvUrl is the path to your csv */
-            // var query = new google.visualization.Query(dataURL2, queryOptions);
-            // query.send(handleQueryResponse);
-
-            // function handleQueryResponse(response) {
-
-            //     if (response.isError()) {
-            //         alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-            //         return;
-            //     }
-
-            //     var data = response.getDataTable();
-
-            //     var chart = new google.visualization.ColumnChart(document.getElementById('your div'));
-            //     // Draw your chart with the data table here.
-            //     // chart.draw(view, queryOptions);
-            // }
         };
     </script>
 </head>
 
 <body>
-    <button id="change-chart">Change to Classic</button>
     <br><br>
     <div id="chart_div" style="width: 800px; height: 500px;"></div>
 </body>

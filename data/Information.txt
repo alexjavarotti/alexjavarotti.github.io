@@ -1,0 +1,4 @@
+1 - Casos: Número de Casos acumulados e novos, velocidade de crescimento dos casos, projeções (fonte: https://covid.saude.gov.br/)
+    > Arquivos em formato Excel podem ser convertidos para CSV, usando padrão UTF-8, 
+      inserindo aspas simples em todas as células e usando ';' para separar as células.
+

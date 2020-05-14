@@ -8,16 +8,17 @@
 
         function drawStuff() {
 
-            var chartDiv = document.getElementById('chart_div');
+            var chartDiv1 = document.getElementById('chart_div1');
+            var chartDiv2 = document.getElementById('chart_div2');
+            var chartDiv3 = document.getElementById('chart_div3');
+            var chartDiv4 = document.getElementById('chart_div4');
+            
 
-            var dataURL1 = 'https://alexjavarotti.github.io/data.csv';
-            var dataURL2 = 'https://raw.githubusercontent.com/alexjavarotti/alexjavarotti.github.io/develop/data/12052020/DT1_PAINEL_COVIDBR_20200512.csv'
+            var dataURL = 'https://raw.githubusercontent.com/alexjavarotti/alexjavarotti.github.io/develop/data/12052020/DT1_PAINEL_COVIDBR_20200512.csv'
             var storedText;
-            var data;
-            var view;
 
             // Acessing data from published CSV files:
-            fetch(dataURL2)
+            fetch(dataURL)
                 .then(function (response) {
                     response.text().then(function (text) {
                         storedText = text;
@@ -37,21 +38,60 @@
                 var array = csvToArray(storedText);
                 var typed = array.map(function (row) {
                     return [
-                        row[0],
-                        row[7],
-                        isNaN(row[10]) ? row[10] : parseFloat(row[10]),
-                        isNaN(row[11]) ? row[11] : parseFloat(row[11])
+                        row[0], //Região
+                        row[2], //Município
+                        row[7], //Data
+                        isNaN(row[10]) ? row[10] : parseFloat(row[10]), //Casos
+                        isNaN(row[11]) ? row[11] : parseFloat(row[11]) //Óbitos
                     ]
                 });
-
                 typed.pop();
-                data = google.visualization.arrayToDataTable(typed);
-                filtered_rows = data.getFilteredRows([{ column: 0, value: "Brasil" }])
-                view = new google.visualization.DataView(data);
-                view.setRows(filtered_rows);
-                view.setColumns([1, 2, 3]);
 
-                drawChart();
+                var data = google.visualization.arrayToDataTable(typed);
+                
+                var view1 = new google.visualization.DataView(data);
+                view1.setColumns([2, 3, 4]);
+                filtered_brasil = data.getFilteredRows([{ column: 0, value: "Brasil" }])
+                view1.setRows(filtered_brasil);
+                drawChart(chartDiv1, 'Brasil', view1);
+
+                var view2 = new google.visualization.DataView(data);
+                view2.setColumns([2, 3, 4]);
+                filtered_natal = data.getFilteredRows([{ column: 1, value: "Natal" }])
+                view2.setRows(filtered_natal);
+                drawChart(chartDiv2, 'Natal', view2);
+
+                var view3 = new google.visualization.DataView(data);
+                view3.setColumns([2, 3, 4]);
+                filtered_fortaleza = data.getFilteredRows([{ column: 1, value: "Fortaleza" }])
+                view3.setRows(filtered_fortaleza);
+                drawChart(chartDiv3, 'Fortaleza', view3);
+
+                var view4 = new google.visualization.DataView(data);
+                view4.setColumns([2, 3, 4]);
+                filtered_sobral = data.getFilteredRows([{ column: 1, value: "Sobral" }])
+                view4.setRows(filtered_sobral);
+                drawChart(chartDiv4, 'Sobral', view4);
+
+            }
+
+            function drawChart(element, local, view) {
+                var materialChart = new google.charts.Bar(element);
+                materialChart.draw(view, google.charts.Bar.convertOptions(getOptions(local)));
+            }
+
+            function getOptions(local) {
+                return {
+                    width: 1200,
+                    chart: {
+                        title: local,
+                        subtitle: 'Casos e óbitos'
+                    },
+                    series: {
+                        0: { title: 'Casos', axis: 'casosAcumulado' }, // Bind series 0 to an axis named 'distance'.
+                        1: { title: 'Óbitos', axis: 'obitosAcumulado' } // Bind series 1 to an axis named 'brightness'.
+                    }
+                };
             }
 
             var materialOptions = {
@@ -63,26 +103,26 @@
                 series: {
                     0: { title: 'Casos', axis: 'casosAcumulado' }, // Bind series 0 to an axis named 'distance'.
                     1: { title: 'Obitos', axis: 'obitosAcumulado' } // Bind series 1 to an axis named 'brightness'.
-                },
-                vAxis: {
-                    viewWindow: {
-                        min: 0,
-                        max: 200000
-                    }
                 }
+                //,
+                // vAxis: {
+                //     viewWindow: {
+                //         min: 0,
+                //         max: 20
+                //     }
+                // }
             };
 
-            function drawChart() {
-                var materialChart = new google.charts.Bar(chartDiv);
-                materialChart.draw(view, google.charts.Bar.convertOptions(materialOptions));
-            }
         };
     </script>
 </head>
 
 <body>
     <br><br>
-    <div id="chart_div" style="width: 800px; height: 500px;"></div>
+    <div id="chart_div1" style="width: 800px; height: 500px;"></div>
+    <div id="chart_div2" style="width: 800px; height: 500px;"></div>
+    <div id="chart_div3" style="width: 800px; height: 500px;"></div>
+    <div id="chart_div4" style="width: 800px; height: 500px;"></div>
 </body>
 
 </html>

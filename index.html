@@ -21,7 +21,7 @@
                 .then(function (response) {
                     response.text().then(function (text) {
                         storedText = text;
-                        //done();
+                        done();
                     });
                 });
 
@@ -42,7 +42,7 @@
                     ]
                 });
 
-                data = google.visualization.arrayToDataTable(typed);
+                data = google.visualization.arrayToDataTable(array);
                 // data = google.visualization.arrayToDataTable([
                 //     ['Galaxy', 'Distance', 'Brightness'],
                 //     ['Canis Major Dwarf', 8000, 23.3],
@@ -101,27 +101,27 @@
             }
 
 
-            var queryOptions = {
-                csvColumns: ['number', 'number', 'number' /* Or whatever the columns in the CSV file are */],
-                csvHasHeader: true /* This should be false if your CSV file doesn't have a header */
-            }
-            /* csvUrl is the path to your csv */
-            var query = new google.visualization.Query(dataURL2, queryOptions);
-            query.send(handleQueryResponse);
+            // var queryOptions = {
+            //     csvColumns: ['number', 'number', 'number' /* Or whatever the columns in the CSV file are */],
+            //     csvHasHeader: true /* This should be false if your CSV file doesn't have a header */
+            // }
+            // /* csvUrl is the path to your csv */
+            // var query = new google.visualization.Query(dataURL2, queryOptions);
+            // query.send(handleQueryResponse);
 
-            function handleQueryResponse(response) {
+            // function handleQueryResponse(response) {
 
-                if (response.isError()) {
-                    alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-                    return;
-                }
+            //     if (response.isError()) {
+            //         alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+            //         return;
+            //     }
 
-                var data = response.getDataTable();
+            //     var data = response.getDataTable();
 
-                var chart = new google.visualization.ColumnChart(document.getElementById('your div'));
-                // Draw your chart with the data table here.
-                // chart.draw(view, queryOptions);
-            }
+            //     var chart = new google.visualization.ColumnChart(document.getElementById('your div'));
+            //     // Draw your chart with the data table here.
+            //     // chart.draw(view, queryOptions);
+            // }
         };
     </script>
 </head>

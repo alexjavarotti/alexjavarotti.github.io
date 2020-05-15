@@ -9,7 +9,7 @@
         function plotModel(index) {
 
             const divBaseName = 'chart_div';
-            const urlBase = 'https://raw.githubusercontent.com/alexjavarotti/alexjavarotti.github.io/develop/data/'
+            const urlBase = 'https://alexjavarotti.github.io/data/'
             const modelFileNameBase = 'model_results_'
             const modelFileNameExtention = '.csv'
 
@@ -30,20 +30,38 @@
                 var array = csvToArray(dataText);
                 var typed = array.map(function (row) {
                     for (i = 0; i < row.length; i++) {
-                        if (i > 0) {
-                            row[i] = parseFloat(row[i])
-                        }
+                        if (i > 0) row[i] = parseFloat(row[i])
                     }
+                    return row;
                 });
+
+                var data = google.visualization.arrayToDataTable(typed);
+                var view = new google.visualization.DataView(data);
+                drawChart(view, chartDiv, 'Model');
             }
+
 
             function csvToArray(csv) {
                 clean = csv.replace(/'/g, '');
                 rows = clean.split("\n")
                 return rows.map(function (row) {
-                    return row.split(";");
+                    return row.split(",");
                 });
             };
+
+            function drawChart(view, element, title) {
+                var chart = new google.visualization.LineChart(element);
+                var options = getOptions(title);
+                chart.draw(view, google.charts.Bar.convertOptions(options));
+            }
+
+            function getOptions(title) {
+                return {
+                    title: title,
+                    curveType: 'function',
+                    legend: { position: 'bottom' },
+                };
+            }
 
 
 

@@ -28,7 +28,9 @@
 
             function dataReceived() {
                 var array = csvToArray(dataText);
-                var typed = array.map(function (row) {
+                var typed = array.map(function (row, index) {
+                    if (index == 0)
+                        return row;
                     for (i = 0; i < row.length; i++) {
                         if (i > 0) row[i] = parseFloat(row[i])
                     }
@@ -70,92 +72,95 @@
 
         function drawStuff() {
 
-            plotModel(1);
+            const max_models = 10
 
-            var chartDiv1 = document.getElementById('chart_div1');
-            var chartDiv2 = document.getElementById('chart_div2');
-            var chartDiv3 = document.getElementById('chart_div3');
-            var chartDiv4 = document.getElementById('chart_div4');
-            var chartDiv5 = document.getElementById('chart_div5');
-            var chartDiv6 = document.getElementById('chart_div6');
-            var chartDiv7= document.getElementById('chart_div7');
-            var chartDiv8 = document.getElementById('chart_div8');
-            var chartDiv9 = document.getElementById('chart_div9');
-            var chartDiv10 = document.getElementById('chart_div10');
+            for (index = 1; index <= max_models; index++)
+                plotModel(index);
 
-            var dataURL = 'https://raw.githubusercontent.com/alexjavarotti/alexjavarotti.github.io/develop/data/12052020/DT1_PAINEL_COVIDBR_20200512.csv'
-            var storedText;
+            // var chartDiv1 = document.getElementById('chart_div1');
+            // var chartDiv2 = document.getElementById('chart_div2');
+            // var chartDiv3 = document.getElementById('chart_div3');
+            // var chartDiv4 = document.getElementById('chart_div4');
+            // var chartDiv5 = document.getElementById('chart_div5');
+            // var chartDiv6 = document.getElementById('chart_div6');
+            // var chartDiv7= document.getElementById('chart_div7');
+            // var chartDiv8 = document.getElementById('chart_div8');
+            // var chartDiv9 = document.getElementById('chart_div9');
+            // var chartDiv10 = document.getElementById('chart_div10');
 
-            // Acessing data from published CSV files:
-            fetch(dataURL)
-                .then(function (response) {
-                    response.text().then(function (text) {
-                        storedText = text;
-                        done();
-                    });
-                });
+            // var dataURL = 'https://raw.githubusercontent.com/alexjavarotti/alexjavarotti.github.io/develop/data/12052020/DT1_PAINEL_COVIDBR_20200512.csv'
+            // var storedText;
 
-            function csvToArray(csv) {
-                clean = csv.replace(/'/g, '');
-                rows = clean.split("\n")
-                return rows.map(function (row) {
-                    return row.split(";");
-                });
-            };
+            // // Acessing data from published CSV files:
+            // fetch(dataURL)
+            //     .then(function (response) {
+            //         response.text().then(function (text) {
+            //             storedText = text;
+            //             done();
+            //         });
+            //     });
 
-            function done() {
-                var array = csvToArray(storedText);
-                var typed = array.map(function (row) {
-                    return [
-                        row[0], //Região
-                        row[2], //Município
-                        row[7], //Data
-                        isNaN(row[10]) ? row[10] : parseFloat(row[10]), //Casos
-                        isNaN(row[11]) ? row[11] : parseFloat(row[11]) //Óbitos
-                    ]
-                });
-                typed.pop();
+            // function csvToArray(csv) {
+            //     clean = csv.replace(/'/g, '');
+            //     rows = clean.split("\n")
+            //     return rows.map(function (row) {
+            //         return row.split(";");
+            //     });
+            // };
 
-                var data = google.visualization.arrayToDataTable(typed);
+            // function done() {
+            //     var array = csvToArray(storedText);
+            //     var typed = array.map(function (row) {
+            //         return [
+            //             row[0], //Região
+            //             row[2], //Município
+            //             row[7], //Data
+            //             isNaN(row[10]) ? row[10] : parseFloat(row[10]), //Casos
+            //             isNaN(row[11]) ? row[11] : parseFloat(row[11]) //Óbitos
+            //         ]
+            //     });
+            //     typed.pop();
 
-                var view1 = new google.visualization.DataView(data);
-                view1.setColumns([2, 3, 4]);
-                filtered_brasil = data.getFilteredRows([{ column: 0, value: "Brasil" }])
-                view1.setRows(filtered_brasil);
-                drawChart(chartDiv1, 'Brasil', view1);
+            //     var data = google.visualization.arrayToDataTable(typed);
 
-                var view2 = new google.visualization.DataView(data);
-                view2.setColumns([2, 3, 4]);
-                filtered_natal = data.getFilteredRows([{ column: 1, value: "Natal" }])
-                view2.setRows(filtered_natal);
-                drawChart(chartDiv2, 'Natal', view2);
+            //     var view1 = new google.visualization.DataView(data);
+            //     view1.setColumns([2, 3, 4]);
+            //     filtered_brasil = data.getFilteredRows([{ column: 0, value: "Brasil" }])
+            //     view1.setRows(filtered_brasil);
+            //     drawChart(chartDiv1, 'Brasil', view1);
 
-                var view3 = new google.visualization.DataView(data);
-                view3.setColumns([2, 3, 4]);
-                filtered_fortaleza = data.getFilteredRows([{ column: 1, value: "Fortaleza" }])
-                view3.setRows(filtered_fortaleza);
-                drawChart(chartDiv3, 'Fortaleza', view3);
+            //     var view2 = new google.visualization.DataView(data);
+            //     view2.setColumns([2, 3, 4]);
+            //     filtered_natal = data.getFilteredRows([{ column: 1, value: "Natal" }])
+            //     view2.setRows(filtered_natal);
+            //     drawChart(chartDiv2, 'Natal', view2);
 
-                var view4 = new google.visualization.DataView(data);
-                view4.setColumns([2, 3, 4]);
-                filtered_sobral = data.getFilteredRows([{ column: 1, value: "Sobral" }])
-                view4.setRows(filtered_sobral);
-                drawChart(chartDiv4, 'Sobral', view4);
+            //     var view3 = new google.visualization.DataView(data);
+            //     view3.setColumns([2, 3, 4]);
+            //     filtered_fortaleza = data.getFilteredRows([{ column: 1, value: "Fortaleza" }])
+            //     view3.setRows(filtered_fortaleza);
+            //     drawChart(chartDiv3, 'Fortaleza', view3);
 
-            }
+            //     var view4 = new google.visualization.DataView(data);
+            //     view4.setColumns([2, 3, 4]);
+            //     filtered_sobral = data.getFilteredRows([{ column: 1, value: "Sobral" }])
+            //     view4.setRows(filtered_sobral);
+            //     drawChart(chartDiv4, 'Sobral', view4);
 
-            function drawChart(element, local, view) {
-                var chart = new google.visualization.LineChart(element);
-                chart.draw(view, google.charts.Bar.convertOptions(getOptions(local)));
-            }
+            // }
 
-            function getOptions(local) {
-                return {
-                    title: local,
-                    curveType: 'function',
-                    legend: { position: 'bottom' },
-                };
-            }
+            // function drawChart(element, local, view) {
+            //     var chart = new google.visualization.LineChart(element);
+            //     chart.draw(view, google.charts.Bar.convertOptions(getOptions(local)));
+            // }
+
+            // function getOptions(local) {
+            //     return {
+            //         title: local,
+            //         curveType: 'function',
+            //         legend: { position: 'bottom' },
+            //     };
+            // }
 
         };
     </script>

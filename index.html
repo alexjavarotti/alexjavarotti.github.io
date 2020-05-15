@@ -1,127 +1,158 @@
 <html>
+
 <head>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', { 'packages': ['corechart', 'bar'] });
-        google.charts.setOnLoadCallback(drawStuff);
+        google.charts.setOnLoadCallback(drawResults);
 
-        function drawStuff() {
+        function plotFirstModel() {
 
-            var chartDiv1 = document.getElementById('chart_div1');
-            var chartDiv2 = document.getElementById('chart_div2');
-            var chartDiv3 = document.getElementById('chart_div3');
-            var chartDiv4 = document.getElementById('chart_div4');
-            
+            const divBaseName = 'chart_div0';
+            const urlBase = 'https://alexjavarotti.github.io/data/'
+            const modelFileNameBase = 'results'
+            const modelFileNameExtention = '.csv'
 
-            var dataURL = 'https://raw.githubusercontent.com/alexjavarotti/alexjavarotti.github.io/develop/data/12052020/DT1_PAINEL_COVIDBR_20200512.csv'
-            var storedText;
+            var dataText;
 
-            // Acessing data from published CSV files:
+            var chartDiv = document.getElementById(divBaseName);
+            var dataURL = urlBase.concat(modelFileNameBase, modelFileNameExtention);
+
             fetch(dataURL)
                 .then(function (response) {
                     response.text().then(function (text) {
-                        storedText = text;
-                        done();
+                        dataText = text;
+                        dataReceived();
                     });
                 });
+
+            function dataReceived() {
+                var array = csvToArray(dataText);
+                array.pop();
+                var typed = array.map(function (row, index) {
+                    if (index == 0)
+                        return row;
+                    for (i = 0; i < row.length; i++) {
+                        if (i > 0) row[i] = parseFloat(row[i])
+                    }
+                    return row;
+                });
+
+                var data = google.visualization.arrayToDataTable(typed);
+                var view = new google.visualization.DataView(data);
+                drawChart(view, chartDiv, 'First Model');
+            }
+
 
             function csvToArray(csv) {
                 clean = csv.replace(/'/g, '');
                 rows = clean.split("\n")
                 return rows.map(function (row) {
-                    return row.split(";");
+                    return row.split(",");
                 });
             };
 
-            function done() {
-                var array = csvToArray(storedText);
-                var typed = array.map(function (row) {
-                    return [
-                        row[0], //Região
-                        row[2], //Município
-                        row[7], //Data
-                        isNaN(row[10]) ? row[10] : parseFloat(row[10]), //Casos
-                        isNaN(row[11]) ? row[11] : parseFloat(row[11]) //Óbitos
-                    ]
-                });
-                typed.pop();
-
-                var data = google.visualization.arrayToDataTable(typed);
-                
-                var view1 = new google.visualization.DataView(data);
-                view1.setColumns([2, 3, 4]);
-                filtered_brasil = data.getFilteredRows([{ column: 0, value: "Brasil" }])
-                view1.setRows(filtered_brasil);
-                drawChart(chartDiv1, 'Brasil', view1);
-
-                var view2 = new google.visualization.DataView(data);
-                view2.setColumns([2, 3, 4]);
-                filtered_natal = data.getFilteredRows([{ column: 1, value: "Natal" }])
-                view2.setRows(filtered_natal);
-                drawChart(chartDiv2, 'Natal', view2);
-
-                var view3 = new google.visualization.DataView(data);
-                view3.setColumns([2, 3, 4]);
-                filtered_fortaleza = data.getFilteredRows([{ column: 1, value: "Fortaleza" }])
-                view3.setRows(filtered_fortaleza);
-                drawChart(chartDiv3, 'Fortaleza', view3);
-
-                var view4 = new google.visualization.DataView(data);
-                view4.setColumns([2, 3, 4]);
-                filtered_sobral = data.getFilteredRows([{ column: 1, value: "Sobral" }])
-                view4.setRows(filtered_sobral);
-                drawChart(chartDiv4, 'Sobral', view4);
-
+            function drawChart(view, element, title) {
+                var chart = new google.visualization.LineChart(element);
+                var options = getOptions(title);
+                chart.draw(view, google.charts.Bar.convertOptions(options));
             }
 
-            function drawChart(element, local, view) {
-                var materialChart = new google.charts.Bar(element);
-                materialChart.draw(view, google.charts.Bar.convertOptions(getOptions(local)));
-            }
-
-            function getOptions(local) {
+            function getOptions(title) {
                 return {
-                    width: 1200,
-                    chart: {
-                        title: local,
-                        subtitle: 'Casos e óbitos'
-                    },
-                    series: {
-                        0: { title: 'Casos', axis: 'casosAcumulado' }, // Bind series 0 to an axis named 'distance'.
-                        1: { title: 'Óbitos', axis: 'obitosAcumulado' } // Bind series 1 to an axis named 'brightness'.
-                    }
+                    title: title,
+                    curveType: 'function',
+                    legend: { position: 'right' },
                 };
             }
+        }
 
-            var materialOptions = {
-                width: 1200,
-                chart: {
-                    title: 'Brasil',
-                    subtitle: 'Casos e óbitos'
-                },
-                series: {
-                    0: { title: 'Casos', axis: 'casosAcumulado' }, // Bind series 0 to an axis named 'distance'.
-                    1: { title: 'Obitos', axis: 'obitosAcumulado' } // Bind series 1 to an axis named 'brightness'.
-                }
-                //,
-                // vAxis: {
-                //     viewWindow: {
-                //         min: 0,
-                //         max: 20
-                //     }
-                // }
+        function plotModel(index) {
+
+            const divBaseName = 'chart_div';
+            const urlBase = 'https://alexjavarotti.github.io/data/'
+            const modelFileNameBase = 'model_results_'
+            const modelFileNameExtention = '.csv'
+
+            var dataText;
+
+            var chartDiv = document.getElementById(divBaseName.concat(index));
+            var dataURL = urlBase.concat(modelFileNameBase, index, modelFileNameExtention);
+
+            fetch(dataURL)
+                .then(function (response) {
+                    response.text().then(function (text) {
+                        dataText = text;
+                        dataReceived();
+                    });
+                });
+
+            function dataReceived() {
+                var array = csvToArray(dataText);
+                var typed = array.map(function (row, index) {
+                    if (index == 0)
+                        return row;
+                    for (i = 0; i < row.length; i++) {
+                        if (i > 0) row[i] = parseFloat(row[i])
+                    }
+                    return row;
+                });
+
+                var data = google.visualization.arrayToDataTable(typed);
+                var view = new google.visualization.DataView(data);
+                drawChart(view, chartDiv, 'Model '.concat(index));
+            }
+
+
+            function csvToArray(csv) {
+                clean = csv.replace(/'/g, '');
+                rows = clean.split("\n")
+                return rows.map(function (row) {
+                    return row.split(",");
+                });
             };
 
+            function drawChart(view, element, title) {
+                var chart = new google.visualization.LineChart(element);
+                var options = getOptions(title);
+                chart.draw(view, google.charts.Bar.convertOptions(options));
+            }
+
+            function getOptions(title) {
+                return {
+                    title: title,
+                    curveType: 'function',
+                    legend: { position: 'bottom' },
+                };
+            }
+        }
+
+        function drawResults() {
+
+            plotFirstModel()
+
+            const max_models = 10
+
+            for (index = 1; index <= max_models; index++)
+                plotModel(index);
         };
+
     </script>
 </head>
 
 <body>
     <br><br>
+    <div id="chart_div0" style="width: 800px; height: 500px;"></div>
     <div id="chart_div1" style="width: 800px; height: 500px;"></div>
     <div id="chart_div2" style="width: 800px; height: 500px;"></div>
     <div id="chart_div3" style="width: 800px; height: 500px;"></div>
     <div id="chart_div4" style="width: 800px; height: 500px;"></div>
+    <div id="chart_div5" style="width: 800px; height: 500px;"></div>
+    <div id="chart_div6" style="width: 800px; height: 500px;"></div>
+    <div id="chart_div7" style="width: 800px; height: 500px;"></div>
+    <div id="chart_div8" style="width: 800px; height: 500px;"></div>
+    <div id="chart_div9" style="width: 800px; height: 500px;"></div>
+    <div id="chart_div10" style="width: 800px; height: 500px;"></div>
 </body>
 
 </html>

@@ -63,8 +63,10 @@
             function placeMarker(dataTable) {
                 var cli = this.getChartLayoutInterface();
                 var chartArea = cli.getChartAreaBoundingBox();
-                document.querySelector('.overlay-marker').style.top = Math.floor(cli.getYLocation(dataTable.getValue(5, 1))) - 50 + "px";
-                document.querySelector('.overlay-marker').style.left = Math.floor(cli.getXLocation(5)) - 10 + "px";
+                document.querySelector('.overlay-marker').style.top = '-5450px';
+                document.querySelector('.overlay-marker').style.left = '400px';
+                //document.querySelector('.overlay-marker').style.top = Math.floor(cli.getYLocation(dataTable.getValue(5, 1))) + 10 + "px";
+                //document.querySelector('.overlay-marker').style.left = Math.floor(cli.getXLocation(5)) - 10 + "px";
             };
 
             function getOptions(title) {
@@ -178,15 +180,6 @@
 </head>
 
 <body>
-    <div class="chartWithMarkerOverlay">
-        <div id="line-chart-marker" style="width: auto; height: 100px;"></div>
-        <div class="overlay-text">
-            <div style="color: #b44; font-family:'Arial Black'; font-size: 14px">NOT OFFICIAL</div>
-        </div>
-        <div class="overlay-marker">
-            <img src="https://alexjavarotti.github.io/images/draftmark.png" height="50">
-        </div>
-    </div>
     <div id="chart_div0" style="width: auto; height: 500px;"></div>
     <div id="chart_div1" style="width: auto; height: 500px;"></div>
     <div id="chart_div2" style="width: auto; height: 500px;"></div>
@@ -198,8 +191,12 @@
     <div id="chart_div8" style="width: auto; height: 500px;"></div>
     <div id="chart_div9" style="width: auto; height: 500px;"></div>
     <div id="chart_div10" style="width: auto; height: 500px;"></div>
-
-
+    <div class="chartWithMarkerOverlay">
+        <div id="line-chart-marker" style="width: auto; height: 100px;"></div>
+        <div class="overlay-marker">
+            <img src="https://alexjavarotti.github.io/images/draftmark.png" height="400">
+        </div>
+    </div>
 </body>
 
 </html>

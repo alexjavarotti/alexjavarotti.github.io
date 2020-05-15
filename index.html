@@ -55,8 +55,17 @@
             function drawChart(view, element, title) {
                 var chart = new google.visualization.LineChart(element);
                 var options = getOptions(title);
+                google.visualization.events.addListener(chart, 'ready', placeMarker.bind(chart, view));
                 chart.draw(view, google.charts.Bar.convertOptions(options));
+
             }
+
+            function placeMarker(dataTable) {
+                var cli = this.getChartLayoutInterface();
+                var chartArea = cli.getChartAreaBoundingBox();
+                document.querySelector('.overlay-marker').style.top = Math.floor(cli.getYLocation(dataTable.getValue(5, 1))) - 50 + "px";
+                document.querySelector('.overlay-marker').style.left = Math.floor(cli.getXLocation(5)) - 10 + "px";
+            };
 
             function getOptions(title) {
                 return {
@@ -138,21 +147,59 @@
         };
 
     </script>
+
+    <style>
+        .chartWithMarkerOverlay {
+            position: relative;
+            width: 700px;
+        }
+
+        .overlay-text {
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            top: 50px;
+            /* chartArea top */
+            left: 200px;
+            /* chartArea left */
+        }
+
+        .overlay-marker {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            top: 53px;
+            /* chartArea top */
+            left: 528px;
+            /* chartArea left */
+        }
+    </style>
+
 </head>
 
 <body>
-    <br><br>
-    <div id="chart_div0" style="width: 800px; height: 500px;"></div>
-    <div id="chart_div1" style="width: 800px; height: 500px;"></div>
-    <div id="chart_div2" style="width: 800px; height: 500px;"></div>
-    <div id="chart_div3" style="width: 800px; height: 500px;"></div>
-    <div id="chart_div4" style="width: 800px; height: 500px;"></div>
-    <div id="chart_div5" style="width: 800px; height: 500px;"></div>
-    <div id="chart_div6" style="width: 800px; height: 500px;"></div>
-    <div id="chart_div7" style="width: 800px; height: 500px;"></div>
-    <div id="chart_div8" style="width: 800px; height: 500px;"></div>
-    <div id="chart_div9" style="width: 800px; height: 500px;"></div>
-    <div id="chart_div10" style="width: 800px; height: 500px;"></div>
+    <div class="chartWithMarkerOverlay">
+        <div id="line-chart-marker" style="width: auto; height: 100px;"></div>
+        <div class="overlay-text">
+            <div style="color: #b44; font-family:'Arial Black'; font-size: 14px">NOT OFFICIAL</div>
+        </div>
+        <div class="overlay-marker">
+            <img src="https://alexjavarotti.github.io/images/draftmark.png" height="50">
+        </div>
+    </div>
+    <div id="chart_div0" style="width: auto; height: 500px;"></div>
+    <div id="chart_div1" style="width: auto; height: 500px;"></div>
+    <div id="chart_div2" style="width: auto; height: 500px;"></div>
+    <div id="chart_div3" style="width: auto; height: 500px;"></div>
+    <div id="chart_div4" style="width: auto; height: 500px;"></div>
+    <div id="chart_div5" style="width: auto; height: 500px;"></div>
+    <div id="chart_div6" style="width: auto; height: 500px;"></div>
+    <div id="chart_div7" style="width: auto; height: 500px;"></div>
+    <div id="chart_div8" style="width: auto; height: 500px;"></div>
+    <div id="chart_div9" style="width: auto; height: 500px;"></div>
+    <div id="chart_div10" style="width: auto; height: 500px;"></div>
+
+
 </body>
 
 </html>

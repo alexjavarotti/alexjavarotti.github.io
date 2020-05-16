@@ -1,0 +1,73 @@
+<html>
+
+<head>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart', 'bar'] });
+        google.charts.setOnLoadCallback(drawResults);
+
+        function drawResults() {
+
+            var data0 = {
+                cols: [
+                    { id: {n:'task', c: 'test'}, label: 'Task', type: 'string' },
+                    { id: 'hours', label: 'Hours per Day', type: 'number' },
+                    { id: 'hours', label: 'value', type: 'number' }],
+                rows: [
+                    { c: [{ v: 'Work' }, { v: 11 }, { v: 1 }] },
+                    { c: [{ v: 'Eat' }, { v: 2 }, { v: 1 }] },
+                    { c: [{ v: 'Commute' }, { v: 2 }, { v: 1 }] },
+                    { c: [{ v: 'Watch TV' }, { v: 2 }, { v: 1 }] },
+                    { c: [{ v: 'Sleep' }, { v: 7}, { v: 1 }] }]
+            };
+
+
+            var data1 = {
+                cols: [
+                    { id: 'A', label: 'NEW A', type: 'string' },
+                    { id: 'B', label: 'B-label', type: 'number' },
+                    { id: 'C', label: 'C-label', type: 'date' }
+                ],
+                rows: [
+                {
+                    c: [
+                    { v: 'a' },
+                    { v: 1.0, f: 'One' },
+                    { v: new Date(2008, 1, 28, 0, 31, 26), f: '2/28/08 12:31 AM' }
+                    ]
+                }, {
+                    c: [
+                    { v: 'b' },
+                    { v: 2.0, f: 'Two' },
+                    { v: new Date(2008, 2, 30, 0, 31, 26), f: '3/30/08 12:31 AM' }
+                    ]
+                }, {
+                    c: [
+                    { v: 'c' },
+                    { v: 3.0, f: 'Three' },
+                    { v: new Date(2008, 3, 30, 0, 31, 26), f: '4/30/08 12:31 AM' }
+                    ]
+                }
+                ]
+            }
+
+            var chartDiv = document.getElementById('chart_div');
+            var table = new google.visualization.DataTable(data0);
+            var view = new google.visualization.DataView(table);
+            var chart = new google.visualization.LineChart(chartDiv);
+            chart.draw(view);
+
+        }
+
+
+
+    </script>
+
+</head>
+
+<body>
+    <div id="chart_div" style="width: auto; height: 500px;"></div>
+</body>
+
+</html>

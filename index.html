@@ -3,6 +3,24 @@
 <head>
     <!-- General Data functions -->
     <script type="text/javascript">
+
+        function statesList() {
+            return ['AL', 'BA', 'CE', 'MA', 'PB', 'PE', 'PI', 'RN', 'SE'];
+        }
+
+        function parseDate(dateText) {
+            var parameter = dateText.split("/")
+            return new Date(Number(parameter[2]), Number(parameter[1]) - 1, Number(parameter[0]));
+        }
+
+        function dateToString(date) {
+            const ano = date.getFullYear();
+            const mes = (`00${date.getMonth() + 1}`).slice(-2);
+            const dia = (`00${date.getDate()}`).slice(-2);
+            return `${dia}/${mes}/${ano}`;
+        }
+
+
         function csvToArray(csv) {
             clean = csv.replace(/'/g, '');
             rows = clean.split("\n")
@@ -10,6 +28,23 @@
                 return row.split(",");
             });
         };
+
+        function createDateRange(start, days) {
+            var result = [];
+            for (i = 0; i < days; i++) {
+                day = addDays(start, i);
+                result.push(day)
+            }
+            return result;
+        }
+
+
+        function addDays(date, days) {
+            var result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        }
+
     </script>
 
     <!-- Data functions for type 3 -->
@@ -17,15 +52,182 @@
 
         function processModelResultsType3() {
             const urlBase = 'https://alexjavarotti.github.io/data/'
-            const modelFileName = 'projecaocasos.csv'
+            const modelFileNamePC = 'projecaocasos.csv'
+            const modelFileNamePO = 'projecaoobitos.csv'
 
-            var dataURL = urlBase.concat(modelFileName)
-            fetch(dataURL)
+            var dataURL_PC = urlBase.concat(modelFileNamePC)
+            var dataURL_PO = urlBase.concat(modelFileNamePO)
+
+            fetch(dataURL_PC)
                 .then(function (response) {
                     response.text().then(function (text) {
-                        var result = typifyModelResultType3(text)
+                        var result = [];
+                        var data_PC = typifyModelResultType3(text)
+                        dissociateSamplesPC(data_PC, result);
+
+                        fetch(dataURL_PO)
+                            .then(function (response) {
+                                response.text().then(function (text) {
+                                    var data_PO = typifyModelResultType3(text)
+                                    dissociateSamplesPO(data_PO, result);
+                                    plotAllGraphs(result);
+                                });
+                            });
                     });
                 });
+        }
+
+        function plotAllGraphs(data) {
+
+            var selectedData = mountTableByVariable(data, 'Casos acumulados');
+            plotData(selectedData, 'chart_div1', 'Casos acumulados')
+
+            var selectedData = mountTableByVariable(data, 'Projeção de casos');
+            plotData(selectedData, 'chart_div2', 'Projeção de casos')
+
+            var selectedData = mountTableByVariable(data, 'Óbitos acumulados');
+            plotData(selectedData, 'chart_div3', 'Óbitos acumulados')
+
+            var selectedData = mountTableByVariable(data, 'Projeção de óbitos');
+            plotData(selectedData, 'chart_div4', 'Projeção de óbitos')
+
+            var selectedData = mountTableBySate(data, 'AL')
+            plotData(selectedData, 'chart_div5', 'Alagoas')
+
+            var selectedData = mountTableBySate(data, 'BA')
+            plotData(selectedData, 'chart_div6', 'Bahia')
+
+            var selectedData = mountTableBySate(data, 'CE')
+            plotData(selectedData, 'chart_div7', 'Ceará')
+
+            var selectedData = mountTableBySate(data, 'MA')
+            plotData(selectedData, 'chart_div8', 'Maranhão')
+
+            var selectedData = mountTableBySate(data, 'PB')
+            plotData(selectedData, 'chart_div9', 'Paraíba')
+
+            var selectedData = mountTableBySate(data, 'PE')
+            plotData(selectedData, 'chart_div10', 'Pernambuco')
+
+            var selectedData = mountTableBySate(data, 'PI')
+            plotData(selectedData, 'chart_div11', 'Piauí')
+
+            var selectedData = mountTableBySate(data, 'RN')
+            plotData(selectedData, 'chart_div12', 'Rio Grande do Norte')
+
+            var selectedData = mountTableBySate(data, 'SE')
+            plotData(selectedData, 'chart_div13', 'Sergipe')
+
+        }
+
+
+        function plotData(data, element, title) {
+
+            var options = { title: title };
+
+            var chartDiv = document.getElementById(element);
+            var table = new google.visualization.DataTable(data);
+            var view = new google.visualization.DataView(table);
+            var chart = new google.visualization.AreaChart(chartDiv);
+            chart.draw(view, options);
+
+            google.visualization.events.addListener(chart, 'click', function (target) {
+                if (target.targetID.match(/^legendentry#\d+$/)) {
+                    var index = parseInt(target.targetID.slice(12)) + 1;
+                    data.cols[index].visible = !data.cols[index].visible;
+                    plotData(data, element, title);
+                }
+            });
+        }
+
+        function mountTableBySate(data, state) {
+
+            var start = new Date(2020, 2, 20);
+            var range = 64
+            var dateRange = createDateRange(start, range).map((d) => dateToString(d));
+
+            var data_cols = [
+                { id: 'date', label: 'Data', type: 'string' },
+                { id: 'cases.cumulative', label: 'Casos acumulados', type: 'number' },
+                { id: 'cases.projection', label: 'Projeção de casos', type: 'number' },
+                { id: 'deaths.cumulative', label: 'Óbitos acumulados', type: 'number' },
+                { id: 'deaths.projection', label: 'Projeção de óbitos', type: 'number' }
+            ]
+            var data_rows = [];
+            for (date of dateRange) {
+                var x1 = searchSamples(data, date, state, 'Casos acumulados')
+                var x2 = searchSamples(data, date, state, 'Projeção de casos')
+                var x3 = searchSamples(data, date, state, 'Óbitos acumulados')
+                var x4 = searchSamples(data, date, state, 'Projeção de óbitos')
+
+                row = { c: [{ v: date }, { v: x1 }, { v: x2 }, { v: x3 }, { v: x4 }] }
+                data_rows.push(row);
+            }
+            return { cols: data_cols, rows: data_rows }
+        }
+
+        function mountTableByVariable(data, variable) {
+
+            var start = new Date(2020, 2, 20);
+            var range = 64
+            var dateRange = createDateRange(start, range).map((d) => dateToString(d));
+
+            var data_cols = [
+                { id: 'date', label: 'Data', type: 'string' },
+                { id: 'AL', label: 'Alagoas', type: 'number' },
+                { id: 'BA', label: 'Bahia', type: 'number' },
+                { id: 'CE', label: 'Ceará', type: 'number' },
+                { id: 'MA', label: 'Maranhão', type: 'number' },
+                { id: 'PB', label: 'Paraíba', type: 'number' },
+                { id: 'PE', label: 'Pernambuco', type: 'number' },
+                { id: 'PI', label: 'Piauí', type: 'number' },
+                { id: 'RN', label: 'Rio Grande do Norte', type: 'number' },
+                { id: 'SE', label: 'Sergipe', type: 'number' },
+            ]
+            var data_rows = [];
+            for (date of dateRange) {
+                var x1 = searchSamples(data, date, 'AL', variable)
+                var x2 = searchSamples(data, date, 'BA', variable)
+                var x3 = searchSamples(data, date, 'CE', variable)
+                var x4 = searchSamples(data, date, 'MA', variable)
+                var x5 = searchSamples(data, date, 'PB', variable)
+                var x6 = searchSamples(data, date, 'PE', variable)
+                var x7 = searchSamples(data, date, 'PI', variable)
+                var x8 = searchSamples(data, date, 'RN', variable)
+                var x9 = searchSamples(data, date, 'SE', variable)
+
+                row = { c: [{ v: date }, { v: x1 }, { v: x2 }, { v: x3 }, { v: x4 }, { v: x5 }, { v: x6 }, { v: x7 }, { v: x8 }, { v: x9 }] }
+                data_rows.push(row);
+            }
+            return { cols: data_cols, rows: data_rows }
+        }
+
+        function dissociateSamplesPC(data, result) {
+
+            var states = statesList();
+
+            for (state of states) {
+                var timeserie_CA = extractSerieByState(data, state, 2)
+                var timeserie_PC = extractSerieByState(data, state, 3)
+                serie_CA = { state: state, variable: 'Casos acumulados', data: timeserie_CA }
+                serie_PC = { state: state, variable: 'Projeção de casos', data: timeserie_PC }
+                result.push(serie_CA);
+                result.push(serie_PC);
+            }
+        }
+
+        function dissociateSamplesPO(data, result) {
+
+            var states = statesList();
+
+            for (state of states) {
+                var timeserie_CO = extractSerieByState(data, state, 2)
+                var timeserie_PO = extractSerieByState(data, state, 3)
+                serie_CO = { state: state, variable: 'Óbitos acumulados', data: timeserie_CO }
+                serie_PO = { state: state, variable: 'Projeção de óbitos', data: timeserie_PO }
+                result.push(serie_CO);
+                result.push(serie_PO);
+            }
         }
 
         // column1 = state, column2 = date
@@ -43,16 +245,23 @@
                 if (index == 0)
                     return row;
                 for (i = 0; i < row.length; i++) {
+                    //if (i == 1) row[i] = Date.parse(row[i])
                     if (i >= 2) row[i] = parseFloat(row[i])
                 }
                 return row;
             });
-            result = typed;
+            return typed;
         }
 
+        function searchSamples(data, date, state, variable) {
+            data_serie = data.filter((serie) => serie.state == state && serie.variable == variable);
+            if (data_serie.length == 0) return null;
 
+            data_value = data_serie[0].data.filter((sample) => sample[0] === date)
+            if (data_value.length == 0) return null;
 
-
+            return data_value[0][1]
+        }
 
     </script>
 
@@ -206,6 +415,10 @@
 
         function drawResults() {
 
+            // var d = new Date();
+            // var r = createDateRange(d, 18);
+            // var x = dateToString(d)
+
             processModelResultsType3()
 
             // plotFirstModel()
@@ -248,10 +461,6 @@
 </head>
 
 <body>
-    <div id="chart_div0" style="width: auto; height: 500px;"></div>
-
-    <div id="chart_div11" style="width: auto; height: 500px;"></div>
-
     <div id="chart_div1" style="width: auto; height: 500px;"></div>
     <div id="chart_div2" style="width: auto; height: 500px;"></div>
     <div id="chart_div3" style="width: auto; height: 500px;"></div>
@@ -262,13 +471,16 @@
     <div id="chart_div8" style="width: auto; height: 500px;"></div>
     <div id="chart_div9" style="width: auto; height: 500px;"></div>
     <div id="chart_div10" style="width: auto; height: 500px;"></div>
+    <div id="chart_div11" style="width: auto; height: 500px;"></div>
+    <div id="chart_div12" style="width: auto; height: 500px;"></div>
+    <div id="chart_div13" style="width: auto; height: 500px;"></div>
 
-    <div class="chartWithMarkerOverlay">
+    <!-- <div class="chartWithMarkerOverlay">
         <div id="line-chart-marker" style="width: auto; height: 100px;"></div>
         <div class="overlay-marker">
             <img src="https://alexjavarotti.github.io/images/draftmark.png" height="400">
         </div>
-    </div>
+    </div> -->
 </body>
 
 </html>

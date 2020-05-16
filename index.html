@@ -1,10 +1,76 @@
 <html>
 
 <head>
+    <!-- General Data functions -->
+    <script type="text/javascript">
+        function csvToArray(csv) {
+            clean = csv.replace(/'/g, '');
+            rows = clean.split("\n")
+            return rows.map(function (row) {
+                return row.split(",");
+            });
+        };
+    </script>
+
+    <!-- Data functions for type 3 -->
+    <script type="text/javascript">
+
+        function processModelResultsType3() {
+            const urlBase = 'https://alexjavarotti.github.io/data/'
+            const modelFileName = 'projecaocasos.csv'
+
+            var dataURL = urlBase.concat(modelFileName)
+            fetch(dataURL)
+                .then(function (response) {
+                    response.text().then(function (text) {
+                        var result = typifyModelResultType3(text)
+                    });
+                });
+        }
+
+        // column1 = state, column2 = date
+        function extractSerieByState(data, state, index) {
+            var step1 = data.filter(element => element[0] == state)
+            var step2 = step1.map(value => [value[1], value[index]])
+            return step2;
+        }
+
+        function typifyModelResultType3(dataText) {
+            var array = csvToArray(dataText);
+            array.pop();
+
+            var typed = array.map(function (row, index) {
+                if (index == 0)
+                    return row;
+                for (i = 0; i < row.length; i++) {
+                    if (i >= 2) row[i] = parseFloat(row[i])
+                }
+                return row;
+            });
+            result = typed;
+        }
+
+
+
+
+
+    </script>
+
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', { 'packages': ['corechart', 'bar'] });
         google.charts.setOnLoadCallback(drawResults);
+
+        // The model 3 considers the following:
+        // - First column: State
+        // - Second column: Date
+        // - From the third column onwards: Values based on results 
+        function plotModelType03() {
+            const divBaseName = 'chart_div11';
+            const urlBase = 'https://alexjavarotti.github.io/data/'
+            const modelFileNameBase = 'projecaocasos'
+            const modelFileNameExtention = '.csv'
+        }
 
         function plotFirstModel() {
 
@@ -140,12 +206,14 @@
 
         function drawResults() {
 
-            plotFirstModel()
+            processModelResultsType3()
 
-            const max_models = 10
+            // plotFirstModel()
 
-            for (index = 1; index <= max_models; index++)
-                plotModel(index);
+            // const max_models = 10
+
+            // for (index = 1; index <= max_models; index++)
+            //     plotModel(index);
         };
 
     </script>
@@ -181,6 +249,9 @@
 
 <body>
     <div id="chart_div0" style="width: auto; height: 500px;"></div>
+
+    <div id="chart_div11" style="width: auto; height: 500px;"></div>
+
     <div id="chart_div1" style="width: auto; height: 500px;"></div>
     <div id="chart_div2" style="width: auto; height: 500px;"></div>
     <div id="chart_div3" style="width: auto; height: 500px;"></div>
@@ -191,6 +262,7 @@
     <div id="chart_div8" style="width: auto; height: 500px;"></div>
     <div id="chart_div9" style="width: auto; height: 500px;"></div>
     <div id="chart_div10" style="width: auto; height: 500px;"></div>
+
     <div class="chartWithMarkerOverlay">
         <div id="line-chart-marker" style="width: auto; height: 100px;"></div>
         <div class="overlay-marker">

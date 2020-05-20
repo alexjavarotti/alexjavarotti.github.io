@@ -1335,7 +1335,24 @@
     <!-- Data functions for type 3 -->
     <script type="text/javascript">
 
+        function processModelResultsType4() {
+            const urlBaseOfficial = 'https://raw.githubusercontent.com/C4NESub9/c4ne-sub9-api/master/data/projecao_obitos.csv'
+            const urlBaseUnofficial = 'https://raw.githubusercontent.com/alexjavarotti/alexjavarotti.github.io/master/data/projecaocasos.csv';
+
+            fetch(urlBaseUnofficial)
+                .then(function (response) {
+                    response.text().then(function (text) {
+                        var result = [];
+                        var data_PC = typifyModelResultType3(text)
+                        dissociateSamplesPC(data_PC, result);
+                        plotAllGraphs(result);
+                    });
+                });
+        }
+
+
         function processModelResultsType3() {
+
             const urlBase = 'https://alexjavarotti.github.io/data/'
             const modelFileNamePC = 'projecaocasos.csv'
             const modelFileNamePO = 'projecaoobitos.csv'
@@ -1348,7 +1365,7 @@
             var projectionDeaths = getProjectionDeaths()
             var data_PC = typifyModelResultType3(projectionCases)
             var data_PO = typifyModelResultType3(projectionDeaths)
-            
+
             dissociateSamplesPC(data_PC, result);
             dissociateSamplesPO(data_PO, result);
             plotAllGraphs(result);
@@ -1377,48 +1394,61 @@
         function plotAllGraphs(data) {
 
             var selectedData = mountTableByVariable(data, 'Casos acumulados');
-            plotData(selectedData, 'chart_div1', 'Casos acumulados')
+            plotDataLineChart(selectedData, 'chart_div1', 'Casos acumulados')
 
             var selectedData = mountTableByVariable(data, 'Projeção de casos');
-            plotData(selectedData, 'chart_div2', 'Projeção de casos')
+            plotDataLineChart(selectedData, 'chart_div2', 'Projeção de casos')
 
             var selectedData = mountTableByVariable(data, 'Óbitos acumulados');
-            plotData(selectedData, 'chart_div3', 'Óbitos acumulados')
+            plotDataLineChart(selectedData, 'chart_div3', 'Óbitos acumulados')
 
             var selectedData = mountTableByVariable(data, 'Projeção de óbitos');
-            plotData(selectedData, 'chart_div4', 'Projeção de óbitos')
+            plotDataLineChart(selectedData, 'chart_div4', 'Projeção de óbitos')
 
             var selectedData = mountTableBySate(data, 'AL')
-            plotData(selectedData, 'chart_div5', 'Alagoas')
+            plaotDataAreaChart(selectedData, 'chart_div5', 'Alagoas')
 
             var selectedData = mountTableBySate(data, 'BA')
-            plotData(selectedData, 'chart_div6', 'Bahia')
+            plaotDataAreaChart(selectedData, 'chart_div6', 'Bahia')
 
             var selectedData = mountTableBySate(data, 'CE')
-            plotData(selectedData, 'chart_div7', 'Ceará')
+            plaotDataAreaChart(selectedData, 'chart_div7', 'Ceará')
 
             var selectedData = mountTableBySate(data, 'MA')
-            plotData(selectedData, 'chart_div8', 'Maranhão')
+            plaotDataAreaChart(selectedData, 'chart_div8', 'Maranhão')
 
             var selectedData = mountTableBySate(data, 'PB')
-            plotData(selectedData, 'chart_div9', 'Paraíba')
+            plaotDataAreaChart(selectedData, 'chart_div9', 'Paraíba')
 
             var selectedData = mountTableBySate(data, 'PE')
-            plotData(selectedData, 'chart_div10', 'Pernambuco')
+            plaotDataAreaChart(selectedData, 'chart_div10', 'Pernambuco')
 
             var selectedData = mountTableBySate(data, 'PI')
-            plotData(selectedData, 'chart_div11', 'Piauí')
+            plaotDataAreaChart(selectedData, 'chart_div11', 'Piauí')
 
             var selectedData = mountTableBySate(data, 'RN')
-            plotData(selectedData, 'chart_div12', 'Rio Grande do Norte')
+            plaotDataAreaChart(selectedData, 'chart_div12', 'Rio Grande do Norte')
 
             var selectedData = mountTableBySate(data, 'SE')
-            plotData(selectedData, 'chart_div13', 'Sergipe')
+            plaotDataAreaChart(selectedData, 'chart_div13', 'Sergipe')
 
         }
 
+        function plotDataLineChart(data, element, title) {
 
-        function plotData(data, element, title) {
+            var options = {
+                title: title
+            };
+
+            var chartDiv = document.getElementById(element);
+            var table = new google.visualization.DataTable(data);
+            var view = new google.visualization.DataView(table);
+            var chart = new google.visualization.LineChart(chartDiv);
+            chart.draw(view, options);
+        }
+
+
+        function plaotDataAreaChart(data, element, title) {
 
             var options = { title: title };
 
@@ -1432,7 +1462,7 @@
                 if (target.targetID.match(/^legendentry#\d+$/)) {
                     var index = parseInt(target.targetID.slice(12)) + 1;
                     data.cols[index].visible = !data.cols[index].visible;
-                    plotData(data, element, title);
+                    plaotDataAreaChart(data, element, title);
                 }
             });
         }
@@ -1460,6 +1490,8 @@
                 row = { c: [{ v: date }, { v: x1 }, { v: x2 }, { v: x3 }, { v: x4 }] }
                 data_rows.push(row);
             }
+
+
             return { cols: data_cols, rows: data_rows }
         }
 
@@ -1479,7 +1511,7 @@
                 { id: 'PE', label: 'Pernambuco', type: 'number' },
                 { id: 'PI', label: 'Piauí', type: 'number' },
                 { id: 'RN', label: 'Rio Grande do Norte', type: 'number' },
-                { id: 'SE', label: 'Sergipe', type: 'number' },
+                { id: 'SE', label: 'Sergipe', type: 'number' }
             ]
             var data_rows = [];
             for (date of dateRange) {
@@ -1568,13 +1600,13 @@
         google.charts.setOnLoadCallback(drawResults);
 
         function drawResults() {
-            processModelResultsType3()
+            processModelResultsType4()
         };
 
     </script>
 </head>
 
-<body style = "font-family:arial;font-size:14px">
+<body style="font-family:arial;font-size:14px">
     <div id="information" style="width: 600px; height: 100px;">
         <h3>Observações</h3>
         <ul>

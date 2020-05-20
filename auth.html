@@ -1,0 +1,74 @@
+<html>
+
+<head>
+
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>-->
+    <script type="text/javascript">
+
+        const urlBaseOfficial = 'https://raw.githubusercontent.com/C4NESub9/c4ne-sub9-api/master/data/projecao_obitos.csv'
+        const urlBaseUnofficial = 'https://raw.githubusercontent.com/alexjavarotti/alexjavarotti.github.io/master/data/projecaocasos.csv';
+
+        fetch(urlBaseUnofficial
+                ,{
+                method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                mode: 'no-cors', // no-cors, *cors, same-origin
+                //cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: 'same-origin', // include, *same-origin, omit
+                headers: {
+                    'Authorization': 'Bearer 31bb22591b0cca700ab05672db3068b7a3ca633d',
+                //    'Content-Type': 'text/plan'
+                }
+                }).then(function (response) {
+                response.text().then(function (text) {
+                    var result = text;
+                });
+            });
+
+
+
+        // async function postData(url) {
+        //     // Default options are marked with *
+        //     const response = await fetch(url, {
+        //         method: 'GET', // *GET, POST, PUT, DELETE, etc.
+        //         mode: 'no-cors', // no-cors, *cors, same-origin
+        //         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        //         credentials: 'same-origin', // include, *same-origin, omit
+        //         headers: {
+        //             'Authorization': 'Bearer 31bb22591b0cca700ab05672db3068b7a3ca633d',
+        //             'Content-Type': 'text/plan'
+        //             // 'Content-Type': 'application/json'
+        //             // 'Content-Type': 'application/x-www-form-urlencoded',
+        //         },
+        //         //redirect: 'follow', // manual, *follow, error
+        //         //referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        //         //body: JSON.stringify(data) // body data type must match "Content-Type" header
+        //     });
+        //     return response; // parses JSON response into native JavaScript objects
+        // }
+
+        // postData('https://raw.githubusercontent.com/alexjavarotti/alexjavarotti.github.io/master/data/projecaocasos.csv')
+        //     .then(data => {
+        //         console.log(data); // JSON data parsed by `response.json()` call
+        //     });
+
+        // $.ajax({
+        //     url: 'https://raw.githubusercontent.com/alexjavarotti/alexjavarotti.github.io/master/data/projecaocasos.csv',
+        //     type: 'GET',
+        //     contentType: 'text/plain',
+        //     headers: {
+        //         'Access-Control-Allow-Orign':'*',
+        //         'Authorization': 'Bearer 31bb22591b0cca700ab05672db3068b7a3ca633d'
+        //     },
+        //     success: function (result) {
+        //         alert("OK")
+        //     },
+        //     error: function (error) {
+        //         alert("Error")
+        //     }
+        // });
+
+
+    </script>
+</head>
+
+</html>

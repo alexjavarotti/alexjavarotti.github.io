@@ -118,10 +118,17 @@ function addDays(date, days) {
     return result;
 }
 
+// function dateToString(date) {
+//     const ano = date.getFullYear();
+//     const mes = (`00${date.getMonth() + 1}`).slice(-2);
+//     const dia = (`00${date.getDate()}`).slice(-2);
+//     return `${dia}/${mes}/${ano}`;
+// }
+
 function dateToString(date) {
     const ano = date.getFullYear();
     const mes = (`00${date.getMonth() + 1}`).slice(-2);
     const dia = (`00${date.getDate()}`).slice(-2);
-    return `${dia}/${mes}/${ano}`;
+    return `${ano}-${mes}-${dia}`;
 }
 

@@ -18,3 +18,18 @@ async function requestData() {
         console.log(err);
     };
 }
+
+async function requestStateData(cumulativeCases, cumulativeDeaths, projectionCases, projectionDeaths) {
+    try {
+        let [data_cumulative_cases, data_cumulative_deaths, data_projection_cases, data__projection_deaths] = await Promise.all([
+            fetch(cumulativeCases).then(response => response.text().then(text => text)),
+            fetch(cumulativeDeaths).then(response => response.text().then(text => text)),
+            fetch(projectionCases).then(response => response.text().then(text => text)),
+            fetch(projectionDeaths).then(response => response.text().then(text => text))
+        ]);
+        return { cumulative_cases: data_cumulative_cases, cumulative_deaths: data_cumulative_deaths, projection_cases : data_projection_cases, projection_deaths: data__projection_deaths }
+    }
+    catch (err) {
+        console.log(err);
+    };
+}

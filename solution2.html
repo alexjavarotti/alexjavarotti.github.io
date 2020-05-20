@@ -1,9 +1,25 @@
 <html>
 
 <head>
-    <script type="text/javascript" src="https://alexjavarotti.github.io/library/libraryTest.js"></script>
+    <script type="text/javascript" src="https://alexjavarotti.github.io/library/data.normalization.js"></script>
     <script type="text/javascript">
 
+
+        // requestData().then(result => {
+        //     var x = result;
+        // });
+    
+        var urlBase = 'https://raw.githubusercontent.com/C4NESub9/googleData/master/dataAl/'
+        requestStateData(
+            urlBase.concat('CAAiL_Al.csv'),
+            urlBase.concat('EANAiL_Al.csv'),
+            urlBase.concat('OAAiL_Al.csv'),
+            urlBase.concat('RNAiL_Al.csv'),
+        ).then(response => {
+            var data = response;
+        });
+    
+    
         // async function requestData() {
         //     alagoas_casos_acumulados = 'https://raw.githubusercontent.com/C4NESub9/googleData/master/dataAl/CAAiL_Al.csv'
         //     bahia_casos_acumulados = 'https://raw.githubusercontent.com/C4NESub9/googleData/master/dataAl/CABiA_Al.csv'
@@ -25,9 +41,7 @@
         //     };
         // }
 
-        requestData().then(result => {
-            var x = result;
-        });
+
 
 
         // Promise.all([

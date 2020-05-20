@@ -4,11 +4,6 @@
     <script type="text/javascript" src="https://alexjavarotti.github.io/library/data.normalization.js"></script>
     <script type="text/javascript">
 
-
-        // requestData().then(result => {
-        //     var x = result;
-        // });
-    
         var urlBase = 'https://raw.githubusercontent.com/C4NESub9/googleData/master/dataAl/'
         requestData4(
             urlBase.concat('CAAiL_Al.csv'),
@@ -16,8 +11,11 @@
             urlBase.concat('OAAiL_Al.csv'),
             urlBase.concat('RNAiL_Al.csv'),
         ).then(response => {
-            var data = response;
+            var data = response.map(x => removeHeaders(x));
+            
         });
+
+
     
     
         // async function requestData() {

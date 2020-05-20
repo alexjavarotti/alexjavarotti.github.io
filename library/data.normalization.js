@@ -20,7 +20,7 @@ async function requestData4(serie1, serie2, serie3, serie4) {
 
 function assignInformation4(data, area, list) {
     var result = data.map((value, index) => {
-        var serie = {'area' : area, 'variable' : list[index], "data": value}
+        var serie = { 'area': area, 'variable': list[index], "data": value }
         return serie;
     });
     return result;
@@ -91,5 +91,30 @@ function typifyData(list) {
         return row;
     });
     return typed;
+}
+
+function searchSamples(data, date, state, variable) {
+    data_serie = data.filter((serie) => serie.area == state && serie.variable == variable);
+    if (data_serie.length == 0) return null;
+
+    data_value = data_serie[0].data.filter((sample) => sample[0] === date)
+    if (data_value.length == 0) return null;
+
+    return data_value[0][1]
+}
+
+function createDateRange(start, days) {
+    var result = [];
+    for (i = 0; i < days; i++) {
+        day = addDays(start, i);
+        result.push(day)
+    }
+    return result;
+}
+
+function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
 }
 

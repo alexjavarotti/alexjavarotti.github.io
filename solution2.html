@@ -14,10 +14,12 @@
             var state = 'Alagoas';
             var variables = ['Casos acumulados', 'Projeção de casos', 'Óbitos acumulados', 'Projeção de óbitos'];
             var start = new Date(2020, 2, 20);
+            var period = 30
 
             var data = assignInformation4(response, state, variables);
-            var table = mountTableByArea(data, state, variables, start, 30);
+            var table = mountTableByArea(data, state, variables, start, period);
             plotDataAreaChart(table, 'chart_div', state)
+            
         });
 
         function plotDataAreaChart(data, element, title) {

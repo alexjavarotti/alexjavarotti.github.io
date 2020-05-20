@@ -12,7 +12,7 @@
             urlBase.concat('RNAiL_Al.csv'),
         ).then(response => {
             var data = response;
-            
+            var base = assignInformation4(data, "Alagoas", ['Casos acumulados','Projeção de casos','Óbitos acumulados','Projeção de óbitos']);
         });
 
 

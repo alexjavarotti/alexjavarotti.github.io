@@ -18,8 +18,12 @@ async function requestData4(serie1, serie2, serie3, serie4) {
     };
 }
 
-function assignInformation4(data, common, list) {
-    
+function assignInformation4(data, area, list) {
+    var result = data.map((value, index) => {
+        var serie = {'area' : area, 'variable' : list[index], "data": value}
+        return serie;
+    });
+    return result;
 }
 
 async function requestData9(serie1, serie2, serie3, serie4, serie5, serie6, serie7, serie8, serie9) {

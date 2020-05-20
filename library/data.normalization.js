@@ -46,6 +46,6 @@ function csvToArray(csv) {
 };
 
 function removeHeaders(list) {
-    return list.splice(0, 1);
+    return list.splice(1);
 }
 

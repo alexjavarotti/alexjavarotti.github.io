@@ -26,6 +26,31 @@ function assignInformation4(data, area, list) {
     return result;
 }
 
+function mountTableByArea(data, area, variables, start, period) {
+
+    var dateRange = createDateRange(start, period).map((d) => dateToString(d));
+
+    var data_cols = [
+        { id: '0', label: 'Data', type: 'string' },
+        { id: '1', label: variables[0], type: 'number' },
+        { id: '2', label: variables[1], type: 'number' },
+        { id: '3', label: variables[2], type: 'number' },
+        { id: '4', label: variables[3], type: 'number' }
+    ]
+    var data_rows = [];
+    for (date of dateRange) {
+        var x1 = searchSamples(data, date, area, variables[0])
+        var x2 = searchSamples(data, date, area, variables[1])
+        var x3 = searchSamples(data, date, area, variables[2])
+        var x4 = searchSamples(data, date, area, variables[3])
+
+        row = { c: [{ v: date }, { v: x1 }, { v: x2 }, { v: x3 }, { v: x4 }] }
+        data_rows.push(row);
+    }
+    return { cols: data_cols, rows: data_rows }
+}
+
+
 async function requestData9(serie1, serie2, serie3, serie4, serie5, serie6, serie7, serie8, serie9) {
     try {
         let [data_serie1, data_serie2, data_serie3, data_serie4] = await Promise.all([

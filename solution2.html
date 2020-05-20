@@ -11,13 +11,30 @@
             urlBase.concat('OAAiL_Al.csv'),
             urlBase.concat('RNAiL_Al.csv'),
         ).then(response => {
-            var data = response;
-            var base = assignInformation4(data, "Alagoas", ['Casos acumulados','Projeção de casos','Óbitos acumulados','Projeção de óbitos']);
+            var state = 'Alagoas';
+            var variables = ['Casos acumulados', 'Projeção de casos', 'Óbitos acumulados', 'Projeção de óbitos'];
+            var start = new Date(2020, 2, 20);
+
+            var data = assignInformation4(response, state, variables);
+            var table = mountTableByArea(data, state, variables, start, 30);
+            plotDataAreaChart(table, 'chart_div', state)
         });
 
+        function plotDataAreaChart(data, element, title) {
 
+            var options = { title: title };
 
+            var chartDiv = document.getElementById(element);
+            var table = new google.visualization.DataTable(data);
+            var view = new google.visualization.DataView(table);
+            var chart = new google.visualization.AreaChart(chartDiv);
+            chart.draw(view, options);
+        }
     </script>
 </head>
+
+<body>
+    <div id="chart_div" style="width: 600px; height: 350px;"></div>
+</body>
 
 </html>

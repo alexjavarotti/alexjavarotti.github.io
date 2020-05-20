@@ -6,7 +6,11 @@ async function requestData4(serie1, serie2, serie3, serie4) {
             fetch(serie3).then(response => response.text().then(text => text)),
             fetch(serie4).then(response => response.text().then(text => text))
         ]);
-        return [data_serie1, data_serie2, data_serie3, data_serie4]
+
+        var responses = [data_serie1, data_serie2, data_serie3, data_serie4];
+        var arrays = responses.map(x => csvToArray(x));
+        var data = arrays.map(x => removeHeaders(x));
+        return data;
     }
     catch (err) {
         console.log(err);
@@ -32,6 +36,14 @@ async function requestData9(serie1, serie2, serie3, serie4, serie5, serie6, seri
         console.log(err);
     };
 }
+
+function csvToArray(csv) {
+    clean = csv.replace(/'/g, '');
+    rows = clean.split("\n")
+    return rows.map(function (row) {
+        return row.split(",");
+    });
+};
 
 function removeHeaders(list) {
     return list.splice(0, 1);

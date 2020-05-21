@@ -23,7 +23,7 @@
             ).then(response => {
                 var variable = 'Casos acumulados';
                 var areas = ['Alagoas', 'Bahia', 'Ceará', 'Maranhão', 'Paraíba', 'Pernambuco', 'Piauí', 'Rio Grande do Norte', 'Sergipe'];
-                var start = new Date(2020, 2, 20);
+                var start = defineDate(20, 3, 2020);
                 var period = 30
 
                 var data = assignInformation9(response, variable, areas);

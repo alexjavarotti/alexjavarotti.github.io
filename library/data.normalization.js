@@ -171,3 +171,7 @@ function dateToString(date) {
     return `${ano}-${mes}-${dia}`;
 }
 
+function defineDate(day, month, year) {
+    return new Date(year, month -1, day);
+}
+

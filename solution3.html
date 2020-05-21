@@ -1,0 +1,52 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="https://alexjavarotti.github.io/library/data.normalization.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart', 'bar'] });
+        google.charts.setOnLoadCallback(processData);
+
+        function processData() {
+
+            var urlBase = 'https://raw.githubusercontent.com/C4NESub9/googleData/master/dataAl/'
+            requestData4(
+                urlBase.concat('CAAiL_Al.csv'),
+                urlBase.concat('CABiA_Al.csv'),
+                urlBase.concat('CACiE_Al.csv'),
+                urlBase.concat('CAMiA_Al.csv'),
+                urlBase.concat('CAPiB_Al.csv'),
+                urlBase.concat('CAPiE_Al.csv'),
+                urlBase.concat('CAPiI_Al.csv'),
+                urlBase.concat('CARiN_Al.csv'),
+                urlBase.concat('CASiE_Al.csv')
+            ).then(response => {
+                var variable = 'Casos acumulados';
+                var areas = ['Alagoas', 'Bahia', 'Ceará', 'Maranhão', 'Paraíba', 'Pernambuco', 'Piauí', 'Rio Grande do Norte', 'Sergipe'];
+                var start = new Date(2020, 2, 20);
+                var period = 30
+
+                var data = assignInformation9(response, variable, areas);
+                var table = mountTableByVariable(data, variable, areas, start, period);
+                plotDataAreaChart(table, 'chart_div', variable)
+
+            });
+
+            function plotDataAreaChart(data, element, title) {
+                var options = { title: title };
+                var chartDiv = document.getElementById(element);
+                var table = new google.visualization.DataTable(data);
+                var view = new google.visualization.DataView(table);
+                var chart = new google.visualization.AreaChart(chartDiv);
+                chart.draw(view, options);
+            }
+        }
+
+</script>
+</head>
+
+<body>
+    <div id="chart_div" style="width: 600px; height: 350px;"></div>
+</body>
+
+</html>

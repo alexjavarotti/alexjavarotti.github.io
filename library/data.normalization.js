@@ -18,9 +18,42 @@ async function requestData4(serie1, serie2, serie3, serie4) {
     };
 }
 
+async function requestData9(serie1, serie2, serie3, serie4, serie5, serie6, serie7, serie8, serie9) {
+    try {
+        let [data_serie1, data_serie2, data_serie3, data_serie4] = await Promise.all([
+            fetch(serie1).then(response => response.text().then(text => text)),
+            fetch(serie2).then(response => response.text().then(text => text)),
+            fetch(serie3).then(response => response.text().then(text => text)),
+            fetch(serie4).then(response => response.text().then(text => text)),
+            fetch(serie5).then(response => response.text().then(text => text)),
+            fetch(serie6).then(response => response.text().then(text => text)),
+            fetch(serie7).then(response => response.text().then(text => text)),
+            fetch(serie8).then(response => response.text().then(text => text)),
+            fetch(serie9).then(response => response.text().then(text => text))
+        ]);
+
+        var responses = [data_serie1, data_serie2, data_serie3, data_serie4, data_serie5, data_serie6, data_serie7, data_serie8, data_serie9];
+        var arrays = responses.map(x => csvToArray(x));
+        var contents = arrays.map(x => removeHeaders(x));
+        var data = contents.map(x => typifyData(x));
+        return data;
+    }
+    catch (err) {
+        console.log(err);
+    };
+}
+
 function assignInformation4(data, area, list) {
     var result = data.map((value, index) => {
-        var serie = { 'area': area, 'variable': list[index], "data": value }
+        var serie = { 'area': area, 'variable': list[index], 'data': value }
+        return serie;
+    });
+    return result;
+}
+
+function assignInformation9(data, variable, list) {
+    var result = data.map((value, index) => {
+        var serie = { 'variable': variable, 'area': list[index], 'data': value }
         return serie;
     });
     return result;
@@ -50,25 +83,38 @@ function mountTableByArea(data, area, variables, start, period) {
     return { cols: data_cols, rows: data_rows }
 }
 
+function mountTableByVariable(data, variable, areas, start, period) {
 
-async function requestData9(serie1, serie2, serie3, serie4, serie5, serie6, serie7, serie8, serie9) {
-    try {
-        let [data_serie1, data_serie2, data_serie3, data_serie4] = await Promise.all([
-            fetch(serie1).then(response => response.text().then(text => text)),
-            fetch(serie2).then(response => response.text().then(text => text)),
-            fetch(serie3).then(response => response.text().then(text => text)),
-            fetch(serie4).then(response => response.text().then(text => text)),
-            fetch(serie5).then(response => response.text().then(text => text)),
-            fetch(serie6).then(response => response.text().then(text => text)),
-            fetch(serie7).then(response => response.text().then(text => text)),
-            fetch(serie8).then(response => response.text().then(text => text)),
-            fetch(serie9).then(response => response.text().then(text => text))
-        ]);
-        return [data_serie1, data_serie2, data_serie3, data_serie4, data_serie5, data_serie6, data_serie7, data_serie8, data_serie9]
+    var dateRange = createDateRange(start, period).map((d) => dateToString(d));
+
+    var data_cols = [
+        { id: '0', label: 'Data', type: 'string' },
+        { id: '1', label: areas[0], type: 'number' },
+        { id: '2', label: areas[1], type: 'number' },
+        { id: '3', label: areas[2], type: 'number' },
+        { id: '4', label: areas[3], type: 'number' },
+        { id: '5', label: areas[4], type: 'number' },
+        { id: '6', label: areas[5], type: 'number' },
+        { id: '7', label: areas[6], type: 'number' },
+        { id: '8', label: areas[7], type: 'number' },
+        { id: '9', label: areas[8], type: 'number' }
+    ]
+    var data_rows = [];
+    for (date of dateRange) {
+        var x1 = searchSamples(data, date, areas[0], variable)
+        var x2 = searchSamples(data, date, areas[1], variable)
+        var x3 = searchSamples(data, date, areas[2], variable)
+        var x4 = searchSamples(data, date, areas[3], variable)
+        var x5 = searchSamples(data, date, areas[4], variable)
+        var x6 = searchSamples(data, date, areas[5], variable)
+        var x7 = searchSamples(data, date, areas[6], variable)
+        var x8 = searchSamples(data, date, areas[7], variable)
+        var x9 = searchSamples(data, date, areas[8], variable)
+
+        row = { c: [{ v: date }, { v: x1 }, { v: x2 }, { v: x3 }, { v: x4 }, { v: x5 }, { v: x6 }, { v: x7 }, { v: x8 }, { v: x9 }] }
+        data_rows.push(row);
     }
-    catch (err) {
-        console.log(err);
-    };
+    return { cols: data_cols, rows: data_rows }
 }
 
 function csvToArray(csv) {

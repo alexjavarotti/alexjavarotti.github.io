@@ -1,0 +1,34 @@
+<html>
+
+<head>
+    <script>
+        
+        function showData() {
+
+            var dataURL = 'http://javarotti.epizy.com/data/data.csv'
+            var storedText;
+
+            // Acessing data from published CSV files:
+            fetch(dataURL)
+                .then(function (response) {
+                    response.text().then(function (text) {
+                        element.innerHTML = text;
+                    });
+                });
+        }
+
+    </script>
+
+</head>
+<body>
+    <div id="div" style="width: auto; height: 500px;">
+        <h4 id="text"> Hello </h4>
+    </div>
+<script>
+        var element = document.getElementById('text');
+        showData();
+</script>
+
+</body>
+
+</html>

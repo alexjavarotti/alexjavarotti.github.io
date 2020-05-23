@@ -1,0 +1,14 @@
+Website for javarotti.epizy.com
+user: alex.javarotti.developer@gmail.com
+
+epiz_25842550!
+Eusk@di1976
+
+FTP Username :  epiz_25842550
+FTP Password :  (Same as your Current vistaPanel Password)
+FTP Hostname or Server: ftp.epizy.com
+
+MySQL Database Name : (Made using MySQL Database Manager )
+MySQL Password : (Same as your current vistaPanel Password)
+MySQL Username : epiz_25842550
+MySQL Hostname or Server: sql101.epizy.com

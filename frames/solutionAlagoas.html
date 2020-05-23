@@ -78,7 +78,7 @@
             requestData1(urlBase).then(response => {
 
                 var casesElement = document.getElementById('cases');
-                var latestMedian = extractValueFromCovidRegional(response, state, 'median');
+                var latestMedian = extractValueFromCovidRegional(response, 'Alagoas', 'median');
 
                 casesElement.innerText = latestMedian;
 

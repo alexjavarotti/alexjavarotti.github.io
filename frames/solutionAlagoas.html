@@ -77,22 +77,16 @@
             urlBase = 'https://raw.githubusercontent.com/epiforecasts/covid-regional/master/brazil/regional-summary/rt.csv'
             requestData1(urlBase).then(response => {
 
-                var casesElement = document.getElementById('cases');
-                var latestMedian = extractValueFromCovidRegional(response, 'Alagoas', 'median');
+                const state = 'Alagoas'
 
-                casesElement.innerText = latestMedian;
+                var R0_element = document.getElementById('R0');
+                var latestRegister_element = document.getElementById('R0');
+                
+                var latestMedian = extractValueFromCovidRegional(response, state, 'median');
+                R0_element.innerText = latestMedian;
 
-
-                // var median_index = response[0].indexOf('median')
-                // var region_index = response[0].indexOf('region')
-                // var date_index = response[0].indexOf('date')
-
-                // var data_region = response.filter(row => row[region_index] === state)
-                // var dates = data_region.map(row => convertToDate(row[date_index]))
-                // var latestDay = new Date(Math.max.apply(null, dates));
-                // var latestRegister = data_region.filter(row => row[date_index] === dateToString(latestDay))
-
-
+                latestRegister = extractLatestUpdateFromCovidRegional(response, state)
+                latestRegister_element.innerText = latestRegister
 
             })
         }
@@ -105,18 +99,22 @@
         <div class="container">
             <h2><b>Alagoas</b></h2>
             <div id="information" style="width: auto; height: 90px;">
-                <div id="left" style="float: left; width:50%">
+                <div id="left" style="float: left; width:33%">
                     <h4 class="compact" style="color:gray"> Casos confirmados</h4>
-                    <h2 id="cases" class="compact" style="color:red"> not available </h2>
+                    <h2 id="cases" class="compact" style="color:black"> not available </h2>
                 </div>
-                <div id="right" style="float: left; width:50%">
+                <div id="right" style="float: left; width:33%">
                     <h4 class="compact" style="color:gray"> Número de óbitos</h4>
-                    <h2 class="compact" style="color:red">9.000</h2>
+                    <h2 id="deaths" class="compact" style="color:red"> not available </h2>
+                </div>
+                <div id="right" style="float: left; width:33%">
+                    <h4 class="compact" style="color:gray"> R0 (média)</h4>
+                    <h2 id="R0" class="compact" style="color:black"> not available </h2>
                 </div>
             </div>
-            <p class="compact">Dados atulizados em 23/04/2020</p>
-            <p class="compact">Dados atulizados em 23/04/2020</p>
-            <p class="compact">Dados atulizados em 23/04/2020</p>
+            <p id="observation1" class="compact"> not available</p>
+            <p id="observation2" class="compact"> not available</p>
+            <p id="observation3" class="compact"> not available</p>
         </div>
         <div id="chart_div" style="width: auto; height: 350px;"></div>
     </div>

@@ -134,16 +134,28 @@ function mountTableByVariable(data, variable, areas, start, period) {
 function extractValueFromCovidRegional(data, region, variable) {
 
     var variable_index = data[0].indexOf(variable)
+    var date_index = data[0].indexOf('date')
+
+    var data_region = data.filter(row => row[region_index] === region)
+    if(data_region.length === 0) return 'Not Avaiable'
+
+    var latestDay = extractLatestUpdateFromCovidRegional(data, region)
+    var latestRegister = data_region.filter(row => row[date_index] === latestDay)
+
+    return latestRegister[0][variable_index];
+}
+function extractLatestUpdateFromCovidRegional(data, region) {
+
     var region_index = data[0].indexOf('region')
     var date_index = data[0].indexOf('date')
 
     var data_region = data.filter(row => row[region_index] === region)
     var dates = data_region.map(row => convertToDate(row[date_index]))
     var latestDay = new Date(Math.max.apply(null, dates));
-    var latestRegister = data_region.filter(row => row[date_index] === dateToString(latestDay))
     
-    return latestRegister.length > 0 ? latestRegister[0][variable_index] : 'not available';
+    return dateToString(latestDay);
 }
+
 
 function csvToArray(csv) {
     clean = csv.replace(/'/g, '');

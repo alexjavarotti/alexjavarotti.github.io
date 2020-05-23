@@ -193,9 +193,10 @@ function convertToDate(text) {
     
     var itens = text.split("-");
     var year = itens[0];
-    var month = itens[1];
+    var month = itens[1] - 1;
     var day = itens[2];
 
     return new Date(year, month, day);
 }
+
 

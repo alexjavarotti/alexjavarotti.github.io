@@ -79,12 +79,16 @@
 
                 const state = 'Acre'
 
-                var median_index = response[0].filter(x => x === 'median')
-                var region_index = response[0].filter(x => x === 'region')
-                var date_index = response[0].filter(x => x === 'date')
+                var median_index = response[0].indexOf('median')
+                var region_index = response[0].indexOf('region')
+                var date_index = response[0].indexOf('date')
 
                 var data_region = response.filter(row => row[region_index] === state)
-                var typed_data = data_region.map(row => row[date_index] = convertToDate(row[date_index]))
+                var dates = data_region.map(row => convertToDate(row[date_index]))
+                var latestDay = new Date(Math.max.apply(null, dates));
+                var latestRegister = data_region.filter(row => row[date_index] === dateToString(latestDay))
+                
+
 
             })
         }

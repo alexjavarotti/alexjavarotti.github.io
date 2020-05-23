@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .card {
+            box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            width: 95%;
+        }
+
+        .card:hover {
+            box-shadow: 4px 8px 16px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            padding: 2px 16px;
+        }
+
+        .font_text {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+        }
+    </style>
+
+    <script>
+        function load() {
+            document.getElementById("Card1").innerHTML = '<object type="text/html" data="solutionAlagoas.html" ></object>';
+            
+        }
+    </script>
+</head>
+
+<body>
+    <div id="Projeções" style="height:100%; width:100%;">
+        <div id="left" style="float: left; width:50%">
+            <div class="card font_text">
+                <div class="container">
+                    <h4><b>Pernambuco</b></h4>
+                    <p>Architect & Engineer</p>
+                </div>
+            </div>
+        </div>
+        <div id="right" style="float: left; width:50%">
+            <div class="card font_text">
+                <div class="container">
+                    <h4><b>Pernambuco</b></h4>
+                    <p>Architect & Engineer</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

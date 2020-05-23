@@ -1,3 +1,18 @@
+async function requestData1(url) {
+    try {
+        let [data] = await Promise.all([
+            fetch(url).then(response => response.text().then(text => text))
+        ]);
+        var responses = [data];
+        var array = responses.map(x => csvToArray(x));
+        return array;
+    }
+    catch (err) {
+        console.log(err);
+    };
+
+}
+
 async function requestData4(serie1, serie2, serie3, serie4) {
     try {
         let [data_serie1, data_serie2, data_serie3, data_serie4] = await Promise.all([
@@ -173,5 +188,15 @@ function dateToString(date) {
 
 function defineDate(day, month, year) {
     return new Date(year, month -1, day);
+}
+
+function convertToDate(text) {
+    
+    var itens = text.split("-");
+    var year = itens[0];
+    var month = itens[1];
+    var day = itens[2];
+
+    return new Date(year, month, day);
 }
 

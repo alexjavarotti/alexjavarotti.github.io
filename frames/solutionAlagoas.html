@@ -77,17 +77,21 @@
             urlBase = 'https://raw.githubusercontent.com/epiforecasts/covid-regional/master/brazil/regional-summary/rt.csv'
             requestData1(urlBase).then(response => {
 
-                const state = 'Acre'
+                var casesElement = document.getElementById('cases');
+                var latestMedian = extractValueFromCovidRegional(response, state, 'median');
 
-                var median_index = response[0].indexOf('median')
-                var region_index = response[0].indexOf('region')
-                var date_index = response[0].indexOf('date')
+                casesElement.innerText = latestMedian;
 
-                var data_region = response.filter(row => row[region_index] === state)
-                var dates = data_region.map(row => convertToDate(row[date_index]))
-                var latestDay = new Date(Math.max.apply(null, dates));
-                var latestRegister = data_region.filter(row => row[date_index] === dateToString(latestDay))
-                
+
+                // var median_index = response[0].indexOf('median')
+                // var region_index = response[0].indexOf('region')
+                // var date_index = response[0].indexOf('date')
+
+                // var data_region = response.filter(row => row[region_index] === state)
+                // var dates = data_region.map(row => convertToDate(row[date_index]))
+                // var latestDay = new Date(Math.max.apply(null, dates));
+                // var latestRegister = data_region.filter(row => row[date_index] === dateToString(latestDay))
+
 
 
             })
@@ -103,7 +107,7 @@
             <div id="information" style="width: auto; height: 90px;">
                 <div id="left" style="float: left; width:50%">
                     <h4 class="compact" style="color:gray"> Casos confirmados</h4>
-                    <h2 id="cases" class="compact" style="color:red">"confirmedCases()"</h2>
+                    <h2 id="cases" class="compact" style="color:red"> not available </h2>
                 </div>
                 <div id="right" style="float: left; width:50%">
                     <h4 class="compact" style="color:gray"> Número de óbitos</h4>

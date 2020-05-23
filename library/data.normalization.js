@@ -131,6 +131,21 @@ function mountTableByVariable(data, variable, areas, start, period) {
     return { cols: data_cols, rows: data_rows }
 }
 
+function extractValueFromCovidRegional(data, region, variable) {
+
+    var variable_index = data[0].indexOf(variable)
+    var region_index = data[0].indexOf('region')
+    var date_index = data[0].indexOf('date')
+
+    var data_region = data.filter(row => row[region_index] === region)
+    var dates = data_region.map(row => convertToDate(row[date_index]))
+    var latestDay = new Date(Math.max.apply(null, dates));
+    var latestRegister = data_region.filter(row => row[date_index] === dateToString(latestDay))
+    
+    return latestRegister[variable_index];
+
+}
+
 function csvToArray(csv) {
     clean = csv.replace(/'/g, '');
     rows = clean.split("\n")

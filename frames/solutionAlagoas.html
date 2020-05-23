@@ -79,14 +79,14 @@
 
                 const state = 'Alagoas'
 
-                var R0_element = document.getElementById('R0');
-                var latestRegister_element = document.getElementById('R0');
+                var R0_element = document.getElementById('R0')
+                var latestRegister_element = document.getElementById('observation1')
                 
-                var latestMedian = extractValueFromCovidRegional(response, state, 'median');
+                var latestMedian = extractValueFromCovidRegional(response, state, 'median')
                 R0_element.innerText = latestMedian;
 
                 latestRegister = extractLatestUpdateFromCovidRegional(response, state)
-                latestRegister_element.innerText = latestRegister
+                latestRegister_element.innerText = "Valor de 'R0' referente a " + latestRegister
 
             })
         }

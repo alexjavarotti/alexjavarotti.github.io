@@ -142,7 +142,7 @@ function extractValueFromCovidRegional(data, region, variable) {
     var latestDay = new Date(Math.max.apply(null, dates));
     var latestRegister = data_region.filter(row => row[date_index] === dateToString(latestDay))
     
-    return latestRegister.length > 0 ? latestRegister[variable_index].toString() : 'not available';
+    return latestRegister.length > 0 ? latestRegister[0][variable_index] : 'not available';
 }
 
 function csvToArray(csv) {

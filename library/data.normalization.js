@@ -3,8 +3,7 @@ async function requestData1(url) {
         let [data] = await Promise.all([
             fetch(url).then(response => response.text().then(text => text))
         ]);
-        var responses = [data];
-        var array = responses.map(x => csvToArray(x));
+        var array = data.map(x => csvToArray(x));
         return array;
     }
     catch (err) {

@@ -24,7 +24,6 @@
             font-family: Verdana, Arial, Helvetica, sans-serif;
             margin: 0px 0px 5px 5px;
         }
-
     </style>
 
     <script type="text/javascript" src="https://alexjavarotti.github.io/library/data.normalization.js"></script>
@@ -68,16 +67,16 @@
                 var chart = new google.visualization.AreaChart(chartDiv);
                 chart.draw(view, options);
             }
-        }
-    </script>
-    <script>
-        loadInformation();
 
-        function loadInformation() {
+            plotInformation()
+
+        }
+
+        function plotInformation() {
 
             urlBase = 'https://raw.githubusercontent.com/epiforecasts/covid-regional/master/brazil/regional-summary/rt.csv'
-            requestData1(utlBase).then(response => {
-                
+            requestData1(urlBase).then(response => {
+
                 const state = 'Acre'
 
                 var median_index = response[0].filter(x => x === 'median')
@@ -87,19 +86,10 @@
                 var data_region = response.filter(row => row[region_index] === state)
                 var typed_data = data_region.map(row => row[date_index] = convertToDate(row[date_index]))
 
-
-
-
             })
-
-
-            
-
-            
-
         }
-
     </script>
+  
 </head>
 
 <body>

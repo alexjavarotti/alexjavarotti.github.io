@@ -1,0 +1,49 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="https://alexjavarotti.github.io/library/data.normalization.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart', 'bar'] });
+        google.charts.setOnLoadCallback(processData);
+
+        function processData() {
+
+            var MSDataSourceURL = 'https://mobileapps.saude.gov.br/esus-vepi/files/unAFkcaNDeXajurGB7LChj8SgQYS2ptm/5d1f3f2a7f43ed55a26ac467d468219f_HIST_PAINEL_COVIDBR_23mai2020.xlsx'
+
+            var urlBase = 'https://raw.githubusercontent.com/C4NESub9/googleData/master/dataAl/'
+            requestData4(
+                urlBase.concat('CAAiL_Al.csv'),
+                urlBase.concat('EANAiL_Al.csv'),
+                urlBase.concat('OAAiL_Al.csv'),
+                urlBase.concat('RNAiL_Al.csv'),
+            ).then(response => {
+                var state = 'Alagoas';
+                var variables = ['Casos acumulados', 'Projeção de casos', 'Óbitos acumulados', 'Projeção de óbitos'];
+                var start = defineDate(20, 3, 2020);
+                var period = 30
+
+                var data = assignInformation4(response, state, variables);
+                var table = mountTableByArea(data, state, variables, start, period);
+                plotDataAreaChart(table, 'chart_div', state)
+
+            });
+
+            function plotDataAreaChart(data, element, title) {
+                var options = { title: title };
+                var chartDiv = document.getElementById(element);
+                var table = new google.visualization.DataTable(data);
+                var view = new google.visualization.DataView(table);
+                var chart = new google.visualization.AreaChart(chartDiv);
+                chart.draw(view, options);
+            }
+        }
+
+</script>
+</head>
+
+<body>
+    <div id="chart_div" style="width: 600px; height: 350px;"></div>
+</body>
+
+</html>

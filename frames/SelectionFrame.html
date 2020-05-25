@@ -1,14 +1,14 @@
 <html>
 
 <head>
+    <script type="text/javascript" src="https://alexjavarotti.github.io/library/data.normalization.js"></script>
     <script>
-
         var index = [
             {
                 name: 'Casos acumulados',
                 urlChart: 'https://alexjavarotti.github.io/frames/charts/chart1.html',
                 csvSource: {
-                    url: 'alexjavarotti.github.io/frames/charts/data.csv',
+                    url: 'https://alexjavarotti.github.io/frames/charts/data.csv',
                     column: 'Total',
                     row: 'Casos'
                 }
@@ -17,7 +17,7 @@
                 name: 'Projeção de casos',
                 urlChart: 'https://alexjavarotti.github.io/frames/charts/chart2.html',
                 csvSource: {
-                    url: 'alexjavarotti.github.io/frames/charts/data.csv',
+                    url: 'https://alexjavarotti.github.io/frames/charts/data.csv',
                     column: 'Total',
                     row: 'Óbitos'
                 }
@@ -26,7 +26,7 @@
                 name: 'Óbitos acumulados',
                 urlChart: 'https://alexjavarotti.github.io/frames/charts/chart3.html',
                 csvSource: {
-                    url: 'alexjavarotti.github.io/frames/charts/data.csv',
+                    url: 'https://alexjavarotti.github.io/frames/charts/data.csv',
                     column: 'Total',
                     row: 'Projeção'
                 }
@@ -37,7 +37,10 @@
         function selectionChanged() {
             var selection = document.getElementById("selection").value;
             var item = index.filter(x => x['name'] === selection)
+
             document.getElementById("frame").src = item[0]["urlChart"]
+            updateVariable(item[0]['csvSource']['url'], item[0]['csvSource']['row'], item[0]['csvSource']['column'])
+
         }
 
         function loadSelectionItens() {
@@ -54,6 +57,15 @@
             selector.add(option)
         }
 
+        function updateVariable(source, row, column) {
+            requestData1(source).then(response => {
+                var header = response[0]
+                var col_index = header.indexOf(column)
+                var value = response.filter(x => x[0] === row)
+
+                document.getElementById("information").innerText = row + ": " + value[0][col_index]
+            })
+        }
 
     </script>
 </head>
@@ -63,7 +75,12 @@
         <div>
             <select id="selection" style="height:30px; width:250px" onchange="selectionChanged()"></select>
         </div>
-        <iframe id="frame" frameBorder="1" width='1000px' height='400px'></iframe>
+        <div>
+            <p id='information'></p>
+        </div>
+        <div>
+            <iframe id="frame" frameBorder="0" width='1000px' height='400px'></iframe>
+        </div>
     </div>
 </body>
 

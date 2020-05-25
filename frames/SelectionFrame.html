@@ -5,42 +5,44 @@
 
         var index = [
             {
-                name : 'Óbitos nos estados do nordeste',
-                urlChart: 'https://.html',
+                name: 'Casos acumulados',
+                urlChart: 'https://alexjavarotti.github.io/frames/charts/chart1.html',
                 csvSource: {
-                    url: 'http://.csv',
-                    column: 1,
-                    row: 1
+                    url: 'alexjavarotti.github.io/frames/charts/data.csv',
+                    column: 'Total',
+                    row: 'Casos'
                 }
             },
             {
-                name : 'Óbitos nos estados do nordeste',
-                urlChart: 'https://.html',
+                name: 'Projeção de casos',
+                urlChart: 'https://alexjavarotti.github.io/frames/charts/chart2.html',
                 csvSource: {
-                    url: 'http://.csv',
-                    column: 1,
-                    row: 1
+                    url: 'alexjavarotti.github.io/frames/charts/data.csv',
+                    column: 'Total',
+                    row: 'Óbitos'
                 }
             },
             {
-                name : 'Óbitos nos estados do nordeste',
-                urlChart: 'https://.html',
+                name: 'Óbitos acumulados',
+                urlChart: 'https://alexjavarotti.github.io/frames/charts/chart3.html',
                 csvSource: {
-                    url: 'http://.csv',
-                    column: 1,
-                    row: 1
+                    url: 'alexjavarotti.github.io/frames/charts/data.csv',
+                    column: 'Total',
+                    row: 'Projeção'
                 }
             }
 
         ]
 
         function selectionChanged() {
-            var value = document.getElementById("selection").value;
-            document.getElementById("frame").src = "https://www.google.com";
+            var selection = document.getElementById("selection").value;
+            var item = index.filter(x => x['name'] === selection)
+            document.getElementById("frame").src = item[0]["urlChart"]
         }
 
         function loadSelectionItens() {
             var selector = document.getElementById("selection")
+            insertItem(selector, "Selecione uma fonte de dados")
             for (item of index) {
                 insertItem(selector, item['name'])
             }
@@ -59,10 +61,9 @@
 <body onload="loadSelectionItens()">
     <div>
         <div>
-            <select id="selection" onchange="selectionChanged()"></select>
+            <select id="selection" style="height:30px; width:250px" onchange="selectionChanged()"></select>
         </div>
-        <iframe id="frame" frameBorder="0" width='1000px' height='1000px'
-            src="https://alexjavarotti.github.io/frames/Dashboard2405.html"></iframe>
+        <iframe id="frame" frameBorder="1" width='1000px' height='400px'></iframe>
     </div>
 </body>
 

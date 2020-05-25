@@ -1,0 +1,69 @@
+<html>
+
+<head>
+    <script>
+
+        var index = [
+            {
+                name : 'Óbitos nos estados do nordeste',
+                urlChart: 'https://.html',
+                csvSource: {
+                    url: 'http://.csv',
+                    column: 1,
+                    row: 1
+                }
+            },
+            {
+                name : 'Óbitos nos estados do nordeste',
+                urlChart: 'https://.html',
+                csvSource: {
+                    url: 'http://.csv',
+                    column: 1,
+                    row: 1
+                }
+            },
+            {
+                name : 'Óbitos nos estados do nordeste',
+                urlChart: 'https://.html',
+                csvSource: {
+                    url: 'http://.csv',
+                    column: 1,
+                    row: 1
+                }
+            }
+
+        ]
+
+        function selectionChanged() {
+            var value = document.getElementById("selection").value;
+            document.getElementById("frame").src = "https://www.google.com";
+        }
+
+        function loadSelectionItens() {
+            var selector = document.getElementById("selection")
+            for (item of index) {
+                insertItem(selector, item['name'])
+            }
+        }
+
+        function insertItem(selector, label) {
+            var option = document.createElement("option")
+            option.text = label
+            selector.add(option)
+        }
+
+
+    </script>
+</head>
+
+<body onload="loadSelectionItens()">
+    <div>
+        <div>
+            <select id="selection" onchange="selectionChanged()"></select>
+        </div>
+        <iframe id="frame" frameBorder="0" width='1000px' height='1000px'
+            src="https://alexjavarotti.github.io/frames/Dashboard2405.html"></iframe>
+    </div>
+</body>
+
+</html>

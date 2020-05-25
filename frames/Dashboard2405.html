@@ -2,16 +2,145 @@
 
 <head>
     <script type="text/javascript">
-    
-        function dataByState(data, state) {
-            var state_index = data[0].indexOf('estado')
-            return data.filter(row => row[state_index] === state)
+
+        function statesList() {
+            return ['AL', 'BA', 'CE', 'MA', 'PB', 'PE', 'PI', 'RN', 'SE'];
         }
-    
+
+        function stateData(data) {
+
+            const states = statesList()
+            var result = {};
+            for (state of states) {
+                result[state] = dataByState(data, state);
+            }
+            return result;
+        }
+
+        function dataByState(data, state) {
+            return data.filter(row => row.estado === state && row.codmun === '')
+        }
+
+        function dataArrayToJson_MS(data) {
+
+            const numberTypeColumns = [8, 9, 10, 11]
+
+            var headers = data[0]
+            var content = data.splice(1)
+
+            var list = content.map((row, index) => {
+                var obj = {}
+                for (i = 0; i < headers.length; i++)
+                    obj[headers[i]] = numberTypeColumns.includes(i) ? Number(row[i]) : row[i]
+                return obj
+            })
+            return list
+        }
+
+        function calculateStateData(data) {
+
+            const states = statesList()
+            var result = {};
+            for (state of states) {
+                var state_data = data[state]
+                result[state] = calculateStateVariables(state_data);
+            }
+            return result;
+        }
+
+        function calculateStateVariables(data) {
+
+            const minimumCases = 100
+            const minimumDeaths = 10
+            const populationFactor = 100000
+            const movingAverageSamples = 6
+
+            var result1 = data.map((object, index, array) => {
+                if (index === 0) {
+                    object['diasCasosNovos'] = 0
+                    object['diasObitosNovos'] = 0
+                    object['incidencia'] = 0
+                } else {
+                    var previous = array[index - 1]
+                    object['casosNovos'] = object['casosAcumulado'] - previous['casosAcumulado']
+                    object['obitosNovos'] = object['obitosAcumulado'] - previous['obitosAcumulado']
+                    object['diasCasosNovos'] = object['casosAcumulado'] < minimumCases ? 0 : previous['diasCasosNovos'] + 1
+                    object['diasObitosNovos'] = object['obitosAcumulado'] < minimumDeaths ? 0 : previous['diasObitosNovos'] + 1
+                    object['incidencia'] = object['diasCasosNovos'] >= 1 ? object['casosNovos'] / object['populacaoTCU2019'] * populationFactor : 0
+                }
+                return object
+            })
+
+            var result2 = result1.map((object, index, array) => {
+                if (index < movingAverageSamples) {
+                    object['movingAverage'] = 0
+                } else {
+                    samples = array.slice(index - movingAverageSamples, index + 1).map(x => x['incidencia'])
+                    object['movingAverage'] = samples.reduce((previous, current) => previous + current, 0) / samples.length
+                }
+                return object
+            })
+            return result2;
+        }
+
+        function alignStates(data) {
+
+            const states = statesList()
+
+            var result = {};
+            for (state of states) {
+                var state_data = data[state]
+                result[state] = state_data.filter(x => x['diasCasosNovos'] > 0)
+            }
+            return result;
+        }
+
+        function mountTable(data) {
+
+            var states = statesList()
+
+            var size = []
+            for (state of states)
+                size.push(data[state].length)
+            max_index = Math.max(...size)
+
+            var data_cols = [
+                { id: '0', label: 'Dias após o caso 100', type: 'number' },
+                { id: '1', label: states[0], type: 'number' },
+                { id: '2', label: states[1], type: 'number' },
+                { id: '3', label: states[2], type: 'number' },
+                { id: '4', label: states[3], type: 'number' },
+                { id: '5', label: states[4], type: 'number' },
+                { id: '6', label: states[5], type: 'number' },
+                { id: '7', label: states[6], type: 'number' },
+                { id: '8', label: states[7], type: 'number' },
+                { id: '9', label: states[8], type: 'number' }
+            ]
+            var data_rows = [];
+            for (day = 1; day < max_index; day++) {
+                var x1 = emptyValueValidation(data[states[0]], day)
+                var x2 = emptyValueValidation(data[states[1]], day)
+                var x3 = emptyValueValidation(data[states[2]], day)
+                var x4 = emptyValueValidation(data[states[3]], day)
+                var x5 = emptyValueValidation(data[states[4]], day)
+                var x6 = emptyValueValidation(data[states[5]], day)
+                var x7 = emptyValueValidation(data[states[6]], day)
+                var x8 = emptyValueValidation(data[states[7]], day)
+                var x9 = emptyValueValidation(data[states[8]], day)
+
+                row = { c: [{ v: day }, { v: x1 }, { v: x2 }, { v: x3 }, { v: x4 }, { v: x5 }, { v: x6 }, { v: x7 }, { v: x8 }, { v: x9 }] }
+                data_rows.push(row);
+            }
+            return { cols: data_cols, rows: data_rows }
+        }
+
+        function emptyValueValidation(state_data, index) {
+            if (state_data[index] === undefined) 
+                return undefined
+            else
+                return state_data[index]['movingAverage']
+        }
     </script>
-
-
-
 
     <script type="text/javascript" src="https://alexjavarotti.github.io/library/data.normalization.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -25,46 +154,35 @@
             var urlBase = 'https://alexjavarotti.github.io/data/ministeriosaude/24052020/HIST_PAINEL_COVIDBR_23mai2020.csv'
 
             requestData1(urlBase).then(response => {
-                var data = response;
-                var BA = dataByState(data);
 
+                var data = dataArrayToJson_MS(response)
+                var state_data = stateData(data)
+                var state_results = calculateStateData(state_data)
+                var align = alignStates(state_results)
+                var table = mountTable(align)
 
+                plotDataAreaChart(table, "chart_div", "Média móvel (Incidência)")
 
             })
 
-            // var urlBase = 'https://raw.githubusercontent.com/C4NESub9/googleData/master/dataAl/'
-            // requestData4(
-            //     urlBase.concat('CAAiL_Al.csv'),
-            //     urlBase.concat('EANAiL_Al.csv'),
-            //     urlBase.concat('OAAiL_Al.csv'),
-            //     urlBase.concat('RNAiL_Al.csv'),
-            // ).then(response => {
-            //     var state = 'Alagoas';
-            //     var variables = ['Casos acumulados', 'Projeção de casos', 'Óbitos acumulados', 'Projeção de óbitos'];
-            //     var start = defineDate(20, 3, 2020);
-            //     var period = 30
-
-            //     var data = assignInformation4(response, state, variables);
-            //     var table = mountTableByArea(data, state, variables, start, period);
-            //     plotDataAreaChart(table, 'chart_div', state)
-
-            // });
-
             function plotDataAreaChart(data, element, title) {
-                var options = { title: title };
+                var options = {
+                    title: title,
+                    curveType: 'function'
+                };
                 var chartDiv = document.getElementById(element);
                 var table = new google.visualization.DataTable(data);
                 var view = new google.visualization.DataView(table);
-                var chart = new google.visualization.AreaChart(chartDiv);
+                var chart = new google.visualization.LineChart(chartDiv);
                 chart.draw(view, options);
             }
         }
 
-</script>
+    </script>
 </head>
 
 <body>
-    <div id="chart_div" style="width: 600px; height: 350px;"></div>
+    <div id="chart_div" style="width: 1500px; height: 800px;"></div>
 </body>
 
 </html>

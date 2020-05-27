@@ -226,6 +226,16 @@ function convertToDate(text) {
     return new Date(year, month, day);
 }
 
+function insertVerticalLineInChart(yValue, data) {
+    data.cols.splice(1, 0, { type: 'string', role: 'annotation' }) 
+    data.rows = data.rows.map(row => {
+        var mark = undefined
+        if (row['c'][0]['v'] === yValue) mark = ''
+        row['c'].splice(1, 0, { v: mark })
+        return row
+    })
+}
+
 
 
 

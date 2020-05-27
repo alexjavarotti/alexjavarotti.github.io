@@ -1,0 +1,109 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="https://alexjavarotti.github.io/library/data.normalization.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart', 'bar'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            var data_cols = [
+                { id: '0', label: 'Data', type: 'string' },
+                { id: '1', label: 'Value1', type: 'number' },
+                { id: '2', label: 'Value2', type: 'number' },
+                { id: '3', label: 'Value3', type: 'number' },
+                { id: '4', label: 'Value4', type: 'number' }
+            ]
+            var data_rows = [];
+            var alpha = 1
+            for (i = 0; i < 10; i++) {
+                var date = alpha++
+                var x1 = alpha++
+                var x2 = alpha++
+                var x3 = alpha++
+                var x4 = alpha++
+
+                row = { c: [{ v: date }, { v: x1 }, { v: x2 }, { v: x3 }, { v: x4 }] }
+                data_rows.push(row);
+            }
+            var data = { cols: data_cols, rows: data_rows }
+
+
+            // var data = google.visualization.arrayToDataTable([
+            //     ['Pergunta', 'Valor 1', 'Valor 2'],//, { type: 'string', role: 'annotation' }],
+            //     ['Pergunta 1', 2, 2],
+            //     ['Pergunta 2', 3, 3],
+            //     ['Pergunta 3', 4, undefined]
+
+            // ]);
+
+            var options = {
+                title: '2016',
+                subtitle: 'Resultados',
+                legend: 'none',
+                height: 600,
+                pointSize: 3,
+                // series: {
+                //     0: {color: '#FF0000', lineWidth: 2, lineDashStyle: [8, 8]},
+                //     1: {color: '#FF0000', lineWidth: 2}
+                // },
+                // vAxis: {
+                //     title: "Status",
+                //     ticks: [
+                //         { v: 1, f: "Ótimo" },
+                //         { v: 2, f: "Bom" },
+                //         { v: 3, f: "Regular" },
+                //         { v: 4, f: "Ruim" }
+                //     ]
+                // },
+                annotations: {
+                    stem: {
+                        color: '#aaaaaa'
+                    },
+                    style: 'line'
+                },
+                //curveType: 'function'
+            };
+
+            insertVerticalLineInChart(16, data)
+            var table = new google.visualization.DataTable(data);
+            var chart = new google.visualization.LineChart(document.getElementById('grafico'));
+
+
+
+
+            chart.draw(table, options);
+        }
+
+        function insertVerticalLineOld(yValue, data) {
+            data.cols.splice(1, 0, { type: 'string', role: 'annotation' })
+            data.rows = data.rows.map(row => {
+                if (row['c'][0]['v'] === yValue)
+                    row['c'].splice(1, 0, { v: '' })
+                else
+                    row['c'].splice(1, 0, { v: undefined })
+                return row
+            })
+        }
+
+
+        function insertVerticalLineInChart(yValue, data) {
+            data.cols.splice(1, 0, { type: 'string', role: 'annotation' }) 
+            data.rows = data.rows.map(row => {
+                var mark = undefined
+                if (row['c'][0]['v'] === yValue) mark = ''
+                row['c'].splice(1, 0, { v: mark })
+                return row
+            })
+        }
+
+    </script>
+</head>
+
+<body>
+    <div id="grafico" style="width: 600px; height: 350px;"></div>
+</body>
+
+</html>

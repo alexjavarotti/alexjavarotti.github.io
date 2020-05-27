@@ -23,16 +23,17 @@
 
                 var data = assignInformation4(response, state, variables);
                 var table = mountTableByArea(data, state, variables, start, period);
-                plotDataAreaChart(table, 'chart_div', state)
+                plotDataAreaChart(table, 'chart_div', state, "2020-04-07")
 
             });
 
-            function plotDataAreaChart(data, element, title) {
-                var options = { title: title };
+            function plotDataAreaChart(data, element, title, projectionLimit) {
+                var options = {
+                    title: title,
+                    annotations: { style: 'line' },
+                };
                 var chartDiv = document.getElementById(element);
-                
-                insertVerticalLineInChart("2020-03-25", data)
-
+                insertVerticalLineInChart(projectionLimit, data)
                 var table = new google.visualization.DataTable(data);
                 var view = new google.visualization.DataView(table);
                 var chart = new google.visualization.AreaChart(chartDiv);

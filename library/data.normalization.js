@@ -236,6 +236,14 @@ function insertVerticalLineInChart(yValue, data) {
     })
 }
 
+class IHME {
+    #data;
+
+    constructor(data) {
+        this.#data = data
+    }
+}
+
 
 
 

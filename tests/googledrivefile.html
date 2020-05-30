@@ -1,48 +1,4 @@
-<!-- <html>
 
-<head>
-
-
-
-    <script type="text/javascript">
-
-
-
-        function get_doc(id) {
-            const url = 'https://www.googleapis.com/drive/v3/files/' + id + '?alt=media'
-            if (self.fetch) {
-                var setHeaders = new Headers();
-                setHeaders.append('Authorization', 'Bearer ' + authToken.access_token);
-                setHeaders.append('Content-Type', mime);
-
-                var setOptions = {
-                    method: 'GET',
-                    headers: setHeaders
-                };
-                fetch(url, setOptions)
-                    .then(response => {
-                        if (response.ok) {
-                            var reader = response.body.getReader();
-                            var decoder = new TextDecoder();
-                            reader.read().then(function (result) {
-                                var data = {}
-                                data = decoder.decode(result.value, { stream: !result.done });
-                                console.log(data);
-                            });
-                        }
-                        else {
-                            console.log("Response wast not ok");
-                        }
-                    }).catch(error => {
-                        console.log("There is an error " + error.message);
-                    });
-            }
-        }
-
-    </script>
-
-    <head> -->
-        
 <html>
 
     <!-- CLient ID 166023391129-he6rftvep42cdj8j3uo5eo5i80dt4uje.apps.googleusercontent.com -->

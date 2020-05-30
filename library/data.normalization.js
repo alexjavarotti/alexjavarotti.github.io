@@ -12,6 +12,22 @@ async function requestData1(url) {
 
 }
 
+async function requestData2(url1, url2) {
+    try {
+        let [data1, data2] = await Promise.all([
+            fetch(url1).then(response => response.text().then(text => text)),
+            fetch(url2).then(response => response.text().then(text => text)),
+        ]);
+        var responses = [data1, data2];
+        var arrays = responses.map(x => csvToArray(x));
+        return arrays;
+    }
+    catch (err) {
+        console.log(err);
+    };
+
+}
+
 async function requestData4(serie1, serie2, serie3, serie4) {
     try {
         let [data_serie1, data_serie2, data_serie3, data_serie4] = await Promise.all([
@@ -159,7 +175,9 @@ function extractLatestUpdateFromCovidRegional(data, region) {
 
 
 function csvToArray(csv) {
-    clean = csv.replace(/'/g, '');
+    clean0 = csv.replace(/'/g, '');
+    clean = clean0.replace(/"/g, '');
+    
     rows = clean.split("\n")
     return rows.map(function (row) {
         return row.split(",");
@@ -236,13 +254,46 @@ function insertVerticalLineInChart(yValue, data) {
     })
 }
 
-class IHME {
-    #data;
+function dataArrayToJson(data, numberTypeColumns) {
 
-    constructor(data) {
-        this.#data = data
-    }
+    var headers = data[0]
+    var content = data.slice(1)
+
+    var list = content.map((row) => {
+        var obj = {}
+        for (i = 0; i < headers.length; i++)
+            obj[headers[i]] = numberTypeColumns.includes(i) ? Number(row[i]) : row[i]
+        return obj
+    })
+    return list
 }
+
+function structureIHME(data) {
+    return new IHME(data)
+}
+
+class IHME {
+    constructor(data) {
+        this.hospitalizationData = this.typifyHospitalizationData(data[0])
+        this.summaryStatsData = this.typifySummaryStatsData(data[1])
+    }
+
+    typifyHospitalizationData(data) {
+        var numberColumns = [...Array(data[0].length).keys()]
+        numberColumns.splice(1,2) //Keeping only number columns
+        return dataArrayToJson(data, numberColumns)
+    }
+
+    typifySummaryStatsData(data) {
+        var numberColumns = [...Array(data[0].length).keys()]
+        numberColumns.splice(0,10) //Keeping only number columns
+        numberColumns.splice(6,12) //Keeping only number columns
+        return dataArrayToJson(data, numberColumns)
+    }
+
+}
+
+
 
 
 

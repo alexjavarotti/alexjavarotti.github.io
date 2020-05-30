@@ -1,58 +1,58 @@
-
 <html>
-    <head>
-      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-      <script type="text/javascript">
-        google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
-  
-        function drawChart() {
-          var data = new google.visualization.DataTable();
 
-          data.addColumn('number', 'dia');
-          data.addColumn('number', 'mortes');
-          data.addColumn({id:'i0', label: 'Projeção (máxima)', type:'number', role:'interval'});
-          data.addColumn({id:'i1', label: 'Projeção (mínima)', type:'number', role:'interval'});
-          data.addColumn({type: 'string', role: 'tooltip', p: {'html': true}})
-    
-          data.addRows([
-              info(10, 100, 100, 100),
-              info(20, 120, 120, 120),
-              info(30, 130, 130, 130),
-              info(40, 90, 95, 85),
-              info(50, 70, 78, 60),
-              info(60, 30, 50, 25),
-              info(70, 80, 100, 65),
-              info(80, 100, 120, 80)
-        ]);
-    
-          // The intervals data as narrow lines (useful for showing raw source data)
-          var options_lines = {
-              title: 'Demonstração de área de incerteza - Google charts',
-              curveType: 'function',
-              lineWidth: 4,
-              intervals: { 'style':'area' },
-              legend: 'none',
-              tooltip: { isHtml: true }
-          };
-    
-          var chart_lines = new google.visualization.LineChart(document.getElementById('chart_lines'));
-          chart_lines.draw(data, options_lines);
-        }
+<head>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
 
-        function info(day, value, upper, down) {
-            return [
-                day, value, upper, down, 
-                '<div style=\"margin: 5px 5px 5px 5px\"> <b>' + value + ' </b> mortes registradas </div>' +
-                '<div style=\"margin: 5px 5px 5px 5px\"> Projeção: entre ' + down + ' e ' + upper + '</div>'
-            ]
-        }
+    function drawChart() {
+      var data = new google.visualization.DataTable();
 
-      </script>
-    </head>
-    <body>
-      <div id="chart_lines" style="width: 900px; height: 500px;"></div>
-    </body>
-  </html>
-    
-  
+      data.addColumn('number', 'dia');
+      data.addColumn('number', 'mortes');
+      data.addColumn({ id: 'i0', label: 'Projeção (máxima)', type: 'number', role: 'interval' });
+      data.addColumn({ id: 'i1', label: 'Projeção (mínima)', type: 'number', role: 'interval' });
+      data.addColumn({ type: 'string', role: 'tooltip', p: { 'html': true } })
+
+      data.addRows([
+        info(10, 100, 100, 100),
+        info(20, 120, 120, 120),
+        info(30, 130, 130, 130),
+        info(40, 90, 95, 85),
+        info(50, 70, 78, 60),
+        info(60, 30, 50, 25),
+        info(70, 80, 100, 65),
+        info(80, 100, 120, 80)
+      ]);
+
+      // The intervals data as narrow lines (useful for showing raw source data)
+      var options_lines = {
+        title: 'Demonstração de área de incerteza - Google charts',
+        curveType: 'function',
+        lineWidth: 4,
+        intervals: { 'style': 'area' },
+        legend: 'none',
+        tooltip: { isHtml: true }
+      };
+
+      var chart_lines = new google.visualization.LineChart(document.getElementById('chart_lines'));
+      chart_lines.draw(data, options_lines);
+    }
+
+    function info(day, value, upper, down) {
+      return [
+        day, value, upper, down,
+        '<div style=\"margin: 5px 5px 5px 5px\"> <b>' + value + ' </b> mortes registradas </div>' +
+        '<div style=\"margin: 5px 5px 5px 5px\"> Projeção: entre ' + down + ' e ' + upper + '</div>'
+      ]
+    }
+
+  </script>
+</head>
+
+<body>
+  <div id="chart_lines" style="width: 900px; height: 500px;"></div>
+</body>
+
+</html>

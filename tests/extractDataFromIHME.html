@@ -16,11 +16,11 @@
             requestData2(hospData, summData).then(data => {
                 const ihme = structureIHME(data)
                 var stateData = ihme.hospitalizationData.filter(register => register["location_name"] === 'Ceara')
-                drawChart(stateData)
+                drawChart(stateData, 'Leitos de UTI no Ceará')
             })
         }
 
-        function drawChart(data) {
+        function drawChart(data, info) {
             var table = new google.visualization.DataTable();
 
             table.addColumn({ id: 'date', label: 'Data', type: 'string' });
@@ -36,7 +36,7 @@
             }
 
             var options = {
-                title: 'UTI - Projeção',
+                title: 'Projeção' + ' (' + info + ')',
                 curveType: 'function',
                 lineWidth: 2,
                 intervals: { 'style': 'area' },

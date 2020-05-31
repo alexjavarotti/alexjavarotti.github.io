@@ -1,3 +1,29 @@
+async function requestFile1(url) {
+    try {
+        let [data] = await Promise.all([
+            fetch(url).then(response => response.text().then(text => text))
+        ]);
+        return data;
+    }
+    catch (err) {
+        console.log(err);
+    };
+}
+
+async function requestFile2(url1, url2) {
+    try {
+        let [data1, data2] = await Promise.all([
+            fetch(url1).then(response => response.text().then(text => text)),
+            fetch(url2).then(response => response.text().then(text => text)),
+        ]);
+        var responses = [data1, data2];
+        return responses;
+    }
+    catch (err) {
+        console.log(err);
+    };
+}
+
 async function requestData1(url) {
     try {
         let [data] = await Promise.all([
@@ -9,7 +35,6 @@ async function requestData1(url) {
     catch (err) {
         console.log(err);
     };
-
 }
 
 async function requestData2(url1, url2) {
@@ -25,7 +50,6 @@ async function requestData2(url1, url2) {
     catch (err) {
         console.log(err);
     };
-
 }
 
 async function requestData4(serie1, serie2, serie3, serie4) {

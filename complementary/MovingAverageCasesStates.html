@@ -1,0 +1,47 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="../library/data.normalization.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart', 'bar'] });
+        google.charts.setOnLoadCallback(processData);
+
+        function processData() {
+
+            var urlBase = 'https://alexjavarotti.github.io/data/ministeriosaude/24052020/HIST_PAINEL_COVIDBR_23mai2020.csv'
+
+            requestData1(urlBase).then(response => {
+
+                var data = dataArrayToJson_MS(response)
+                var state_data = stateData(data)
+                var state_results = calculateStateData(state_data)
+                var align = alignStates(state_results, 'diasCasosNovos')
+                var table = mountTable(align, 'movingAverageCases')
+
+                plotDataAreaChart(table, "chart_div", "Média móvel (Incidência)")
+
+            })
+
+            function plotDataAreaChart(data, element, title) {
+                var options = {
+                    title: title,
+                    curveType: 'function',
+                    vAxis: { logScale: false }
+                };
+                var chartDiv = document.getElementById(element);
+                var table = new google.visualization.DataTable(data);
+                var view = new google.visualization.DataView(table);
+                var chart = new google.visualization.LineChart(chartDiv);
+                chart.draw(view, options);
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+    <div id="chart_div" style="width: auto; height: 800px;"></div>
+</body>
+
+</html>

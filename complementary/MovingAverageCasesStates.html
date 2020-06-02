@@ -25,7 +25,7 @@
                     var align = alignStates(state_results, 'diasCasosNovos')
                     var table = mountTable(align, 'movingAverageCases')
 
-                    plotDataAreaChart(table, "chart_div", "Média móvel (Casos)")
+                    plotDataAreaChart(table, "chart_div", "Incidência por 100 mil habitantes", "Média Móvel de 7 dias")
 
                 } catch (error) {
                     alert('Chave incorreta !')
@@ -33,24 +33,21 @@
             })
 
             // var urlBase = 'https://alexjavarotti.github.io/data/ministeriosaude/24052020/HIST_PAINEL_COVIDBR_23mai2020.csv'
-
             // requestData1(urlBase).then(response => {
-
             //     var data = dataArrayToJson_MS(response)
             //     var state_data = stateData(data)
             //     var state_results = calculateStateData(state_data)
             //     var align = alignStates(state_results, 'diasCasosNovos')
             //     var table = mountTable(align, 'movingAverageCases')
-
             //     plotDataAreaChart(table, "chart_div", "Média móvel (Incidência)")
-
             // })
 
-            function plotDataAreaChart(data, element, title) {
+            function plotDataAreaChart(data, element, title, subtitle) {
                 var options = {
-                    title: title,
+                    title: title + "\n" + subtitle,
                     curveType: 'function',
-                    vAxis: { logScale: false }
+                    vAxis: { logScale: false },
+                    hAxis: { title: "Número de dias após o 100º caso" }
                 };
                 var chartDiv = document.getElementById(element);
                 var table = new google.visualization.DataTable(data);

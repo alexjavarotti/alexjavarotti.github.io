@@ -254,6 +254,14 @@ function dateToString(date) {
     return `${ano}-${mes}-${dia}`;
 }
 
+function dateToStringBR(date) {
+    const ano = date.getFullYear();
+    const mes = (`00${date.getMonth() + 1}`).slice(-2);
+    const dia = (`00${date.getDate()}`).slice(-2);
+    return `${dia}-${mes}-${ano}`;
+}
+
+
 function defineDate(day, month, year) {
     return new Date(year, month - 1, day);
 }
@@ -462,6 +470,14 @@ function emptyValueValidation(state_data, index, variable) {
         return state_data[index][variable]//['movingAverage']
 }
 
+function lastDate(data) {
+    var list = [] 
+    for (var state in data) {
+        dates = data[state].map(x => convertToDate(x['data']))
+        list.push(new Date(Math.max(...dates)))
+    }
+    return dateToStringBR(new Date(Math.max(...list)))
+}
 
 // End: Functions related to Minsiterio da Saúde data
 

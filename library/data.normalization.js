@@ -276,6 +276,25 @@ function convertToDate(text) {
     return new Date(year, month, day);
 }
 
+function lastDateMS(data) {
+    var list = [] 
+    for (var state in data) {
+        dates = data[state].map(x => convertToDateMS(x['data']))
+        list.push(new Date(Math.max(...dates)))
+    }
+    return dateToStringBR(new Date(Math.max(...list)))
+}
+
+function convertToDateMS(text) {
+
+    var itens = text.split("/");
+    var year = itens[2];
+    var month = itens[0] - 1;
+    var day = itens[1];
+
+    return new Date(year, month, day);
+}
+
 function insertVerticalLineInChart(yValue, data) {
     data.cols.splice(1, 0, { type: 'string', role: 'annotation' })
     data.rows = data.rows.map(row => {

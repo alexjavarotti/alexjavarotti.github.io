@@ -1,0 +1,18 @@
+# Para rodar o DELPHI automaticamente
+echo "get_ms_scriptGH.py"
+/home/boselli/Marco/prog/epidemia/delphi_br/get_ms_scriptGH.py
+echo "ms_to_delphiGH.py"
+/home/boselli/Marco/prog/epidemia/delphi_br/ms_to_delphiGH.py
+echo "DELPHI_model"
+/home/boselli/Marco/prog/epidemia/delphi_br/DELPHI_model_bare_023_gh.py
+#
+echo 'Rodou o DELPHI'
+#
+data=$(date +"%m-%d-%Y %T")
+echo "DELPHI Update ${data}"
+git remote add origin git@github.com:maboselli/DELPHI_figs.git
+git add .
+git commit -m "update ${data}"
+git push -f origin master
+
+

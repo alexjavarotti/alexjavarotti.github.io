@@ -1,0 +1,7 @@
+1. Download the csv file from https://covid.saude.gov.br
+2. Remove all data that is not related to Nordeste
+3. Save as CSV (spearated by comma and marked by simple quotes as text)
+4. Criptography the csv file using crypto.html and access key : 'MandacaruSub9'
+6. Update the file ./data/ministerioasaude/NECovidSub9.txt 
+7. Commit changes in alexjavarotti.github.io
+
